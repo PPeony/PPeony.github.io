@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CCF计算机软件能力认证201912-2回收站选址java题解 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="回收站选址题目描述
+开学了，可是校园里堆积了不少垃圾杂物。热心的同学们纷纷自发前来清理，为学校注入正能量~通过无人机航拍我们已经知晓了n处尚待清理的垃圾位置，其中第i（1&amp;lt;=i&amp;lt;=n）处,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">CCF计算机软件能力认证201912-2回收站选址java题解</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">CCF计算机软件能力认证201912-2回收站选址java题解</h1>
+        <div class="stuff">
+            <span>二月 20, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h2 id="回收站选址"><a href="#回收站选址" class="headerlink" title="回收站选址"></a>回收站选址</h2><h4 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h4><blockquote>
+<p>开学了，可是校园里堆积了不少垃圾杂物。<br>热心的同学们纷纷自发前来清理，为学校注入正能量~<br>通过无人机航拍我们已经知晓了n处尚待清理的垃圾位置，其中第i（1&lt;=i&lt;=n）处的坐标为（x，y），保证所有的坐标均为整数。<br>我们希望在垃圾集中的地方建立些回收站。具体来说，对于一个位置（x, y）是否适合建立回收站，我们主要考虑以下几点：<br>（x, y）必须是整数坐标，且该处存在垃圾：上下左右四个邻居位置，即（x, y+1），（x, y-1），（x+1, y）和（x-1, y）处，必须全部存在垃圾：进一步地，我们会对满足上述两个条件的选址进行评分，分数为不大于4的自然数，表示在（x±1，y±1）四个对角位置中有几处存在垃圾。<br>现在，请你统计一下每种得分的选址个数。</p>
+</blockquote>
+<h4 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h4><blockquote>
+<p>从标准输入读入数据。输入总共有n+1行。<br>第1行包含一个正整数n，表示已查明的垃圾点个数。<br>第1+i行（1&lt;=i&lt;=n）包含由一个空格分隔的两个整数xi和yi，表示第i处垃圾的坐标。<br>保证输入的n个坐标互不相同。</p>
+</blockquote>
+<h4 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h4><blockquote>
+<p>输出到标准输出。<br>输出共五行，每行一个整数，依次表示得分为0、1、2、3和4的回收站选址个数。</p>
+</blockquote>
+<h4 id="输入样例1"><a href="#输入样例1" class="headerlink" title="输入样例1"></a>输入样例1</h4><blockquote>
+<p>7<br>1 2<br>2 1<br>0 0<br>1 1<br>1 0<br>2 0<br>0 1</p>
+</blockquote>
+<h4 id="输出样例1"><a href="#输出样例1" class="headerlink" title="输出样例1"></a>输出样例1</h4><blockquote>
+<p>0<br>0<br>1<br>0<br>0</p>
+</blockquote>
+<h4 id="样例解释1"><a href="#样例解释1" class="headerlink" title="样例解释1"></a>样例解释1</h4><blockquote>
+<p><img src="https://img-blog.csdnimg.cn/20191223163154715.png" alt="0
+0
+1
+0
+0"><br>如图所示，仅有（1，1）可选为回收站地址，评分为2.</p>
+</blockquote>
+<h4 id="输入样例2"><a href="#输入样例2" class="headerlink" title="输入样例2"></a>输入样例2</h4><blockquote>
+<p>2<br>0 0<br>-100000 10</p>
+</blockquote>
+<h4 id="输出样例2"><a href="#输出样例2" class="headerlink" title="输出样例2"></a>输出样例2</h4><blockquote>
+<p>0<br>0<br>0<br>0<br>0</p>
+</blockquote>
+<h4 id="样例解释2"><a href="#样例解释2" class="headerlink" title="样例解释2"></a>样例解释2</h4><blockquote>
+<p>不存在可选地址。</p>
+</blockquote>
+<h4 id="输入样例3"><a href="#输入样例3" class="headerlink" title="输入样例3"></a>输入样例3</h4><blockquote>
+<p>11<br>9 10<br>10 10<br>11 10<br>12 10<br>13 10<br>11 9<br>11 8<br>12 9<br>10 9<br>10 11<br>12 11</p>
+</blockquote>
+<h4 id="输出样例3"><a href="#输出样例3" class="headerlink" title="输出样例3"></a>输出样例3</h4><blockquote>
+<p>0<br>2<br>1<br>0<br>0</p>
+</blockquote>
+<h4 id="样例解释3"><a href="#样例解释3" class="headerlink" title="样例解释3"></a>样例解释3</h4><blockquote>
+<p>1分选址：（10，10）和（12，10）；<br>2分选址：（11，9）</p>
+</blockquote>
+<h4 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h4><blockquote>
+<p>测试点1和2，保证对于任意的i皆满足0&lt;=xi, yi&lt;=2；<br>测试点3、4和5，保证对于任意的i皆满足0&lt;=xi, yi&lt;= 500；<br>测试点6、7和8，保证对于任意的i皆满足0&lt;=xi, yi&lt;= 10^9；<br>测试点9和10，保证对于任意的i皆满足|xi|, |yi|&lt;=10^9，即坐标可以是负数。<br>所有的测试点保证1&lt;=n&lt;=10^3。</p>
+</blockquote>
+<h4 id="思路与代码"><a href="#思路与代码" class="headerlink" title="思路与代码"></a>思路与代码</h4><p>我当时想着暴力去解决，也就是用一个点，逐个的去和其他点比较，这样用两个for实现，索性最后通过了。（其实后来看看数据范围，数据范围并不大）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"><span class="comment">//首先创建一个point类表示每个点的横纵坐标</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">point</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> x;</span><br><span class="line">	<span class="keyword">int</span> y;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">point</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.x=x;</span><br><span class="line">		<span class="keyword">this</span>.y=y;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">judge</span><span class="params">(point a,point b)</span></span>&#123;</span><br><span class="line">	<span class="comment">//判断能不能作为垃圾桶点，也就是上下左右都有垃圾</span></span><br><span class="line">		<span class="keyword">if</span>(a.x==b.x&amp;&amp;a.y+<span class="number">1</span>==b.y)<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">		<span class="keyword">if</span>(a.x==b.x&amp;&amp;a.y-<span class="number">1</span>==b.y)<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">		<span class="keyword">if</span>(a.x+<span class="number">1</span>==b.x&amp;&amp;a.y==b.y)<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">		<span class="keyword">if</span>(a.x-<span class="number">1</span>==b.x&amp;&amp;a.y==b.y)<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">jscore</span><span class="params">(point a,point b)</span></span>&#123;</span><br><span class="line">	<span class="comment">//判断对角线上有没有点（垃圾）</span></span><br><span class="line">		<span class="keyword">if</span>(a.x-<span class="number">1</span>==b.x&amp;&amp;a.y-<span class="number">1</span>==b.y)<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">		<span class="keyword">if</span>(a.x-<span class="number">1</span>==b.x&amp;&amp;a.y+<span class="number">1</span>==b.y)<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">		<span class="keyword">if</span>(a.x+<span class="number">1</span>==b.x&amp;&amp;a.y+<span class="number">1</span>==b.y)<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">		<span class="keyword">if</span>(a.x+<span class="number">1</span>==b.x&amp;&amp;a.y-<span class="number">1</span>==b.y)<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[]solve(point[]p)&#123;</span><br><span class="line">	<span class="keyword">int</span>[]a=<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">5</span>];</span><br><span class="line">	<span class="keyword">int</span> score=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;p.length;i++)&#123;</span><br><span class="line">	<span class="comment">//取一个点出来，逐个和其他点比较</span></span><br><span class="line">		<span class="keyword">int</span> count=<span class="number">0</span>;</span><br><span class="line">		score=<span class="number">0</span>;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;p.length;j++)&#123;</span><br><span class="line">			<span class="keyword">if</span>(j==i)<span class="keyword">continue</span>;</span><br><span class="line">			<span class="keyword">if</span>(judge(p[i],p[j]))&#123;</span><br><span class="line">				count++;</span><br><span class="line">				<span class="comment">//上下左右其中一个满足了</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span>(jscore(p[i],p[j]))&#123;</span><br><span class="line">				score++;</span><br><span class="line">				<span class="comment">//对角线上存在垃圾</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(count==<span class="number">4</span>)&#123;</span><br><span class="line">		<span class="comment">//只有上下左右都有垃圾的时候才能计数</span></span><br><span class="line">			a[score]++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		Scanner sc=<span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">		<span class="keyword">while</span>(sc.hasNext())&#123;</span><br><span class="line">			<span class="keyword">int</span> n=sc.nextInt();</span><br><span class="line">			point[]p=<span class="keyword">new</span> point[n];</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">				<span class="keyword">int</span> x=sc.nextInt();</span><br><span class="line">				<span class="keyword">int</span> y=sc.nextInt();</span><br><span class="line">				p[i]=<span class="keyword">new</span> point(x,y);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">int</span>[]a=solve(p);</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;a.length;i++)&#123;</span><br><span class="line">				System.out.println(a[i]);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h4><p>这道题用了半个多小时，感觉还可以，虽然方法笨了一点，还好他没设置太大的数据范围。这基本就是我这侧ccf的终点了，前两题用了一个小时，第三题算了接近三个小时，还是没整出来，只有10分。总分210，第一次参加ccf感觉还可以吧，虽然开始有些慌乱，不过这个分数还是可以接受，平时做最高也就250。这次之后学一学图，在巩固一下字符串的逻辑，争取下次能到300吧。（๑ `▽´๑)۶！！！</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
