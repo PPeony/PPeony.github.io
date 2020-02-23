@@ -5,12 +5,13 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>分类: 前言 - peony&#39;s blogs</title>
+    <title>hexo搭建当中的问题 - peony&#39;s blogs</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="peony,"> 
-    
+    <meta name="description" content="一、网络问题
+nothing to commit, working directory clean然后卡一会fatal: unable to access ‘https://github.com/x,"> 
     <meta name="author" content="peony"> 
     <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon63.png"> 
@@ -35,75 +36,82 @@
 <body class="loading">
     <span id="config-title" style="display:none">peony&#39;s blogs</span>
     <div id="loader"></div>
-    <div class="nav">
-    <ul id="menu-menu" class="menu">
-        
-        <li class="pview menu-item menu-item-type-post_type menu-item-object-page">
-            <a href="/whoami/" title="Whoami" target="_blank" rel="noopener">Whoami</a>
-        </li>
-        
-        <li class="  menu-item menu-item-type-post_type menu-item-object-page">
-            <a href="https://github.com/PPeony" title="Github(目前没有任何项目，除了这篇博客)" target="_blank" rel="noopener">Github(目前没有任何项目，除了这篇博客)</a>
-        </li>
-        
-        <li class="  menu-item menu-item-type-post_type menu-item-object-page">
-            <a href="https://leetcode-cn.com/u/peony-2/" title="leetcode" target="_blank" rel="noopener">leetcode</a>
-        </li>
-        
-        <li class="  menu-item menu-item-type-post_type menu-item-object-page">
-            <a href="https://blog.csdn.net/qq_15764477" title="CSDN" target="_blank" rel="noopener">CSDN</a>
-        </li>
-        
-        <li class="pview menu-item menu-item-type-post_type menu-item-object-page">
-            <a href="/categories/" title="分类" target="_blank" rel="noopener">分类</a>
-        </li>
-        
-    </ul>
-    <p id="copyright">
-        &copy; 2020 peony.
-        Powered by <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a>
-        Theme <a href="https://github.com/Fechin/hexo-theme-diaspora" title="Diaspora" target="_blank" rel="noopener">Diaspora</a>
-        by Fechin
-    </p>
-</div>
-
-<div id="container">
-    
-<div id="screen">
-    <div id="mark">
-        <div class="layer" data-depth="0.4">
-            <img src="/img/welcome-cover2.jpg" id="cover" crossorigin="anonymous" width="1920" height="1080">
-        </div>
-    </div>
-    <div id="vibrant">
-        <svg viewBox="0 0 2880 1620" height="100%" preserveAspectRatio="xMaxYMax slice">
-            <polygon opacity="0.7" points="2000,1620 0,1620 0,0 600,0 "/>
-        </svg>
-        <div></div>
-    </div>
-    <div id="header">
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">hexo搭建当中的问题</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
         <div>
-            <a class="image-logo" href="/"></a>
-            <div class="icon-menu switchmenu"></div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
         </div>
     </div>
-    
-    <div id="post0">
-        <p>二月 20, 2020</p>
-        <h2><a href="/2020/02/20/%E5%89%8D%E8%A8%80/" title="前言" class="posttitle">前言</a></h2>
-        <p class="summary">创造个人博客的原因这一切都要从一只蝙蝠说起，下午没什么事做，就看着视频搭了一个博客，打算把csdn上面的都搬过来（...</p>
-    </div>
-    
+    <div class="scrollbar"></div>
 </div>
 
-    <div id="primary">
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">hexo搭建当中的问题</h1>
+        <div class="stuff">
+            <span>二月 21, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h3 id="一、网络问题"><a href="#一、网络问题" class="headerlink" title="一、网络问题"></a>一、网络问题</h3><blockquote>
+<p>nothing to commit, working directory clean<br>然后卡一会<br>fatal: unable to access ‘<a href="https://github.com/xxx/xxx.github.io.git/&#39;" target="_blank" rel="noopener">https://github.com/xxx/xxx.github.io.git/&#39;</a>: Failed to connect to github.com port 443: Timed out</p>
+</blockquote>
+<p>经过我很多次的尝试，我感觉这是网络问题，有时候hexo d可以成功，有的时候就会出现这个问题。</p>
+<h3 id="二、要用gitbash"><a href="#二、要用gitbash" class="headerlink" title="二、要用gitbash"></a>二、要用gitbash</h3><p>hexo d时会输入用户名字和密码，但是cmd会在输入密码的时候卡住，gitbash就不会。而且如果输入密码的次数多，好像会锁定，一段时间内进不去。<strong>所以，一定要用gitbash！！！！</strong></p>
+<h3 id="三、gitalk"><a href="#三、gitalk" class="headerlink" title="三、gitalk"></a>三、gitalk</h3><p>如果各项参数都没问题，比如OAuth Application的参数。</p>
+<h4 id="报错gittalk遇到未找到相关的-Issues-进行评论"><a href="#报错gittalk遇到未找到相关的-Issues-进行评论" class="headerlink" title="报错gittalk遇到未找到相关的 Issues 进行评论"></a>报错gittalk遇到未找到相关的 Issues 进行评论</h4><p>点击登录，授权一下就可以了</p>
+<h4 id="error-Not-Found"><a href="#error-Not-Found" class="headerlink" title="error:Not Found"></a>error:Not Found</h4><p>说明OAuth Application的参数没写对，在yml文件里面。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
         
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
     </div>
     
 </div>
-<div id="preview"></div>
 
 
+    </div>
+</div>
 </body>
 
 <script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>

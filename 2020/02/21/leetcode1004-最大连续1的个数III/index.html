@@ -5,12 +5,17 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>前言 - peony&#39;s blogs</title>
+    <title>leetcode1004.最大连续1的个数III - peony&#39;s blogs</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="peony,"> 
-    <meta name="description" content="创造个人博客的原因这一切都要从一只蝙蝠说起，下午没什么事做，就看着视频搭了一个博客，打算把csdn上面的都搬过来（虽说也没多少）。开始想用docker，但是奈何这墙太高了，加速器都翻不过去，最后选择,"> 
+    <meta name="description" content="leetcode1004. 最大连续1的个数 III
+
+给定一个由若干 0 和 1 组成的数组 A，我们最多可以将 K 个值从 0 变成 1 。返回仅包含 1 的最长（连续）子数组的长度。
+
+
+示例,"> 
     <meta name="author" content="peony"> 
     <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon63.png"> 
@@ -40,7 +45,7 @@
     <div class="bar" style="width: 0;"></div>
     <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
     <div title="播放/暂停" class="icon-play"></div>
-    <h3 class="subtitle">前言</h3>
+    <h3 class="subtitle">leetcode1004.最大连续1的个数III</h3>
     <div class="social">
         <!--<div class="like-icon">-->
             <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
@@ -58,16 +63,26 @@
     <div class="section">
         <div class="article">
     <div class='main'>
-        <h1 class="title">前言</h1>
+        <h1 class="title">leetcode1004.最大连续1的个数III</h1>
         <div class="stuff">
-            <span>二月 20, 2020</span>
+            <span>二月 21, 2020</span>
             
 
         </div>
         <div class="content markdown">
-            <h1 id="创造个人博客的原因"><a href="#创造个人博客的原因" class="headerlink" title="创造个人博客的原因"></a>创造个人博客的原因</h1><p>这一切都要从一只蝙蝠说起，下午没什么事做，就看着视频搭了一个博客，打算把csdn上面的都搬过来（虽说也没多少）。开始想用docker，但是奈何这墙太高了，加速器都翻不过去，最后选择了hexo。虽然有的时候github也不给机会，但是反复试半个小时还是能成功的。<br>搭了六七个小时，终于能动了，选了一个好看一点的主题，唯一缺点就是没有搜索功能，但是他的主题真不错。(这个主题终于让我有机会试用我的Pixiv图集了)。这个版本问题在于配图占用我不少本地空间，看上了一个melody主题感觉挺好，想起来再换吧。</p>
-<h5 id="提交时候的问题"><a href="#提交时候的问题" class="headerlink" title="提交时候的问题"></a>提交时候的问题</h5><p>如果用命令行hexo d，会发生无法输入密码的情况，所以得用git bash（ssh的方法怎么试也不好使）。而且如果反复输错密码似乎会有惩罚时间。</p>
-<h4 id="那么，旅途开始了"><a href="#那么，旅途开始了" class="headerlink" title="那么，旅途开始了"></a>那么，旅途开始了</h4><p>~20200220</p>
+            <h1 id="leetcode1004-最大连续1的个数-III"><a href="#leetcode1004-最大连续1的个数-III" class="headerlink" title="leetcode1004. 最大连续1的个数 III"></a>leetcode1004. 最大连续1的个数 III</h1><hr>
+<blockquote>
+<p>给定一个由若干 0 和 1 组成的数组 A，我们最多可以将 K 个值从 0 变成 1 。<br>返回仅包含 1 的最长（连续）子数组的长度。</p>
+</blockquote>
+<blockquote>
+<p>示例 1：<br>输入：A = [1,1,1,0,0,0,1,1,1,1,0], K = 2<br>输出：6<br>解释：<br>[1,1,1,0,0,<strong>1</strong>,1,1,1,1,<strong>1</strong>]<br>粗体数字从 0 翻转到 1，最长的子数组长度为 6。</p>
+</blockquote>
+<blockquote>
+<p>示例 2：<br>输入：A = [0,0,1,1,0,0,1,1,1,0,1,1,0,0,0,1,1,1,1], K = 3<br>输出：10<br>解释：<br>[0,0,1,1,<strong>1</strong>,<strong>1</strong>,1,1,1,<strong>1</strong>,1,1,0,0,0,1,1,1,1]<br>粗体数字从 0 翻转到 1，最长的子数组长度为 10。</p>
+</blockquote>
+<p>滑动窗口。没有用到评论区那些花里胡哨的，就是一个窗口右边进来怎么处理，左边要出去怎么处理。只不过这么写时间复杂度很高。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">longestOnes</span><span class="params">(<span class="keyword">int</span>[] A, <span class="keyword">int</span> K)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> result=<span class="number">0</span>,i=<span class="number">0</span>,j=<span class="number">0</span>,tmp=K;</span><br><span class="line">        <span class="keyword">while</span>(j&lt;A.length) &#123;</span><br><span class="line">        	<span class="keyword">if</span>(A[j]==<span class="number">0</span>) &#123;</span><br><span class="line">        		tmp--;</span><br><span class="line">        		<span class="keyword">if</span>(tmp&lt;<span class="number">0</span>) &#123;</span><br><span class="line">        			<span class="comment">//左窗口缩小</span></span><br><span class="line">        			<span class="keyword">while</span>(A[i]!=<span class="number">0</span>) &#123;</span><br><span class="line">        				i++;</span><br><span class="line">        			&#125;</span><br><span class="line">        			i++;</span><br><span class="line">        			<span class="comment">//对于示例1来说，如果不i++，i是第一个0的位置</span></span><br><span class="line">        			<span class="comment">//但是我们想让他在第二个0的位置</span></span><br><span class="line">        			tmp++;</span><br><span class="line">        		&#125;</span><br><span class="line">        	&#125;</span><br><span class="line">        	result=Math.max(j-i+<span class="number">1</span>, result);</span><br><span class="line">        	j++;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>在这之后我看了一下4ms的代码，发现差不多。我觉得唯一的差别可能在于最后的比较最大值上面。如果用max函数是9ms，if-else是8ms，而三目运算符只用了                      <strong>6</strong>ms，这个差距还是很大的。但是也不能一概而论，三目运算符不一定永远比if-else快，因为前者还可能会有类型转换的问题。<br><strong>leetcode 8/100</strong></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
