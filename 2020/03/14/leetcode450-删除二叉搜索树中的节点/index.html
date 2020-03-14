@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>leetcode450. 删除二叉搜索树中的节点 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="leetcode450. 删除二叉搜索树中的节点
+
+给定一个二叉搜索树的根节点 root 和一个值 key，删除二叉搜索树中的 key 对应的节点，并保证二叉搜索树的性质不变。返回二叉搜索树（有可能,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">leetcode450. 删除二叉搜索树中的节点</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">leetcode450. 删除二叉搜索树中的节点</h1>
+        <div class="stuff">
+            <span>三月 14, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="leetcode450-删除二叉搜索树中的节点"><a href="#leetcode450-删除二叉搜索树中的节点" class="headerlink" title="leetcode450. 删除二叉搜索树中的节点"></a>leetcode450. 删除二叉搜索树中的节点</h1><hr>
+<blockquote>
+<p>给定一个二叉搜索树的根节点 root 和一个值 key，删除二叉搜索树中的 key 对应的节点，并保证二叉搜索树的性质不变。返回二叉搜索树（有可能被更新）的根节点的引用。</p>
+</blockquote>
+<blockquote>
+<p>一般来说，删除节点可分为两个步骤：</p>
+</blockquote>
+<blockquote>
+<p>首先找到需要删除的节点；<br>如果找到了，删除它。<br>说明： 要求算法时间复杂度为 O(h)，h 为树的高度。</p>
+</blockquote>
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<blockquote>
+<p>root = [5,3,6,2,4,null,7]<br>key = 3</p>
+</blockquote>
+<pre><code> 5
+/ \
+3   6
+/ \   \
+2   4   7</code></pre><blockquote>
+<p>给定需要删除的节点值是 3，所以我们首先找到 3 这个节点，然后删除它。</p>
+</blockquote>
+<blockquote>
+<p>一个正确的答案是 [5,4,6,2,null,null,7], 如下图所示。</p>
+</blockquote>
+<pre><code>    5
+   / \
+   4   6
+ /     \
+2       7</code></pre><blockquote>
+<p>另一个正确答案是 [5,2,6,null,4,null,7]。</p>
+</blockquote>
+<pre><code>5
+  / \
+2   6
+ \   \
+ 4   7</code></pre><h3 id="我的思路"><a href="#我的思路" class="headerlink" title="我的思路"></a>我的思路</h3><p>二叉搜索树特性:每个节点的左子树比当前节点小,右子树比当前的大.中序遍历是一个递增的序列.<br>找出要删除的节点和他的父节点,然后再执行删除操作.<br>删除操作的过程 : 把删除节点key的右子树直接代替key,然后把key原来的左子树,放在这个右子树的最左侧端点处,也就是最小的节点的左节点.保证二叉搜索树的性质不变.<br>我的这个算法虽然看着麻烦,但是时间复杂度也是树的高度.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> TreeNode <span class="title">deleteNode</span><span class="params">(TreeNode root, <span class="keyword">int</span> key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root==<span class="keyword">null</span>)<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span>(root.val==key)&#123;<span class="comment">//删除根节点特殊判断</span></span><br><span class="line">            TreeNode newRoot=root.right;</span><br><span class="line">            TreeNode tmp=newRoot;</span><br><span class="line">            <span class="keyword">if</span>(tmp==<span class="keyword">null</span>)&#123;<span class="comment">//没有右子树直接把左子树接过来,下面也一样</span></span><br><span class="line">                newRoot=root.left;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">while</span>(tmp.left!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    tmp=tmp.left;</span><br><span class="line">                &#125;</span><br><span class="line">                tmp.left=root.left;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> newRoot;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        find(root,key);</span><br><span class="line">        <span class="keyword">if</span>(keyNodeP==<span class="keyword">null</span>)<span class="keyword">return</span> root;<span class="comment">//树里面并没有key</span></span><br><span class="line">        <span class="keyword">if</span>(keyNodeP.left==keyNode)&#123;</span><br><span class="line">            <span class="comment">//节点在左子树</span></span><br><span class="line">            keyNodeP.left=keyNode.right;</span><br><span class="line">            TreeNode tmp=keyNode.right;</span><br><span class="line">            <span class="keyword">if</span>(tmp==<span class="keyword">null</span>)&#123;<span class="comment">//同上</span></span><br><span class="line">                keyNodeP.left=keyNode.left;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">while</span>(tmp.left!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    tmp=tmp.left;</span><br><span class="line">                &#125;</span><br><span class="line">                tmp.left=keyNode.left;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//节点在右子树</span></span><br><span class="line">            keyNodeP.right=keyNode.right;</span><br><span class="line">            TreeNode tmp=keyNode.right;</span><br><span class="line">            <span class="keyword">if</span>(tmp==<span class="keyword">null</span>)&#123;</span><br><span class="line">                keyNodeP.right=keyNode.left;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">while</span>(tmp.left!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                    tmp=tmp.left;</span><br><span class="line">                &#125;</span><br><span class="line">                tmp.left=keyNode.left;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> TreeNode keyNodeP=<span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">public</span> TreeNode keyNode=<span class="keyword">null</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">find</span><span class="params">(TreeNode root,<span class="keyword">int</span> key)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(keyNodeP!=<span class="keyword">null</span>)<span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">if</span>(root==<span class="keyword">null</span>)<span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">if</span>((root.left!=<span class="keyword">null</span>&amp;&amp;root.left.val==key))&#123;</span><br><span class="line">            keyNodeP=root;</span><br><span class="line">            keyNode=root.left;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(root.right!=<span class="keyword">null</span>&amp;&amp;root.right.val==key)&#123;</span><br><span class="line">            keyNodeP=root;</span><br><span class="line">            keyNode=root.right;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(key&lt;root.val)&#123;</span><br><span class="line">            find(root.left,key);</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(key&gt;root.val)&#123;</span><br><span class="line">            find(root.right,key);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="题解区的算法"><a href="#题解区的算法" class="headerlink" title="题解区的算法"></a>题解区的算法</h3><p><a href="https://leetcode-cn.com/problems/delete-node-in-a-bst/solution/java-di-gui-by-zxy0917-10/" target="_blank" rel="noopener">递归删除二叉搜索树中的节点</a><br>这是我看到的代码比较简洁的了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> TreeNode <span class="title">deleteNode</span><span class="params">(TreeNode root, <span class="keyword">int</span> key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (root.val == key) &#123;</span><br><span class="line">        <span class="comment">//如果右子树为null，则返回左子树</span></span><br><span class="line">        <span class="keyword">if</span> (root.right == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> root.left;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//如果右子树不为null，则返回右子树的最小节点</span></span><br><span class="line">            <span class="comment">//node为最小节点，parent为父节点</span></span><br><span class="line">            TreeNode node = root.right;</span><br><span class="line">            TreeNode parent = root;</span><br><span class="line">            <span class="keyword">while</span> (node != <span class="keyword">null</span> &amp;&amp; node.left != <span class="keyword">null</span>) &#123;</span><br><span class="line">                parent = node;</span><br><span class="line">                node = node.left;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//在右子树上删除node节点</span></span><br><span class="line">            <span class="keyword">if</span> (parent.left == node) parent.left = node.right;</span><br><span class="line">            <span class="keyword">if</span> (parent.right == node) parent.right = node.right;</span><br><span class="line">            <span class="comment">//将node节点放在key节点位置上</span></span><br><span class="line">            node.left = root.left;</span><br><span class="line">            node.right = root.right;</span><br><span class="line">            <span class="keyword">return</span> node;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (root.val &lt; key) &#123;</span><br><span class="line">        root.right = deleteNode(root.right, key);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        root.left = deleteNode(root.left, key);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>个人感觉这种递归还是不好想,虽然他已经够简单了.<br><strong>leetcode 50/100</strong></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

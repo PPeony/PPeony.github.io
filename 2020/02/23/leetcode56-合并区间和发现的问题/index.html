@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>leetcode56.合并区间和发现的问题 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="leetcode56. 合并区间
+给出一个区间的集合，请合并所有重叠的区间。
+
+
+示例 1:输入: [[1,3],[2,6],[8,10],[15,18]]输出: [[1,6],[8,10],[15,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">leetcode56.合并区间和发现的问题</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">leetcode56.合并区间和发现的问题</h1>
+        <div class="stuff">
+            <span>二月 23, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="leetcode56-合并区间"><a href="#leetcode56-合并区间" class="headerlink" title="leetcode56. 合并区间"></a>leetcode56. 合并区间</h1><blockquote>
+<p>给出一个区间的集合，请合并所有重叠的区间。</p>
+</blockquote>
+<blockquote>
+<p>示例 1:<br>输入: [[1,3],[2,6],[8,10],[15,18]]<br>输出: [[1,6],[8,10],[15,18]]<br>解释: 区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].</p>
+</blockquote>
+<blockquote>
+<p>示例 2:<br>输入: [[1,4],[4,5]]<br>输出: [[1,5]]<br>解释: 区间 [1,4] 和 [4,5] 可被视为重叠区间。</p>
+</blockquote>
+<p>首先要明白一件事，按照区间左端点start排序之后，能合并的区间一定是连续的。这样就只用每次判断右端点是否满足条件就可以。<br>题只要理解了原理不难，但是我发现了一个问题。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">public class cmp implements Comparator&lt;int[]&gt; &#123;</span><br><span class="line"><span class="comment">//排序的方式，如果返回值小于0,说明a&lt;b</span></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(<span class="keyword">int</span>[]a, <span class="keyword">int</span>[]b)</span> </span>&#123;</span><br><span class="line">			<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">			<span class="keyword">return</span> a[<span class="number">0</span>]-b[<span class="number">0</span>];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[][] merge(<span class="keyword">int</span>[][] intervals) &#123;</span><br><span class="line">        <span class="keyword">if</span>(intervals.length==<span class="number">0</span>)<span class="keyword">return</span> intervals;</span><br><span class="line">		Arrays.sort(intervals,<span class="keyword">new</span> cmp());</span><br><span class="line">        <span class="keyword">int</span>[] tmp=<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">        ArrayList&lt;<span class="keyword">int</span>[]&gt;list=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        tmp[<span class="number">0</span>]=intervals[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">        tmp[<span class="number">1</span>]=intervals[<span class="number">0</span>][<span class="number">1</span>];</span><br><span class="line">        list.add(tmp);</span><br><span class="line">        <span class="keyword">int</span> left=<span class="number">0</span>,right=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;intervals.length;i++) &#123;</span><br><span class="line">        	left=list.get(list.size()-<span class="number">1</span>)[<span class="number">0</span>];</span><br><span class="line">    		right=list.get(list.size()-<span class="number">1</span>)[<span class="number">1</span>];</span><br><span class="line">        	<span class="keyword">if</span>(intervals[i][<span class="number">0</span>]&gt;right) &#123;</span><br><span class="line">        		left=intervals[i][<span class="number">0</span>];</span><br><span class="line">        		right=intervals[i][<span class="number">1</span>];</span><br><span class="line">        		<span class="keyword">int</span>[]p= &#123;left,right&#125;;</span><br><span class="line">        		<span class="comment">//tmp[0]=left;</span></span><br><span class="line">        		<span class="comment">//tmp[1]=right;</span></span><br><span class="line">        		list.add(p);</span><br><span class="line">        	&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">    			list.remove(list.size()-<span class="number">1</span>);</span><br><span class="line">        		right=Math.max(intervals[i][<span class="number">1</span>],right);</span><br><span class="line">        		<span class="comment">//tmp[0]=left;</span></span><br><span class="line">        		<span class="comment">//tmp[1]=right;</span></span><br><span class="line">        		<span class="keyword">int</span>[]p= &#123;left,right&#125;;</span><br><span class="line">        		list.add(p);</span><br><span class="line">        	&#125;</span><br><span class="line">        	<span class="comment">/*for(int ii=0;ii&lt;list.size();ii++) &#123;</span></span><br><span class="line"><span class="comment">        		System.out.print("第"+i+"次"+"["+list.get(ii)[0]+","+list.get(ii)[1]+"],");</span></span><br><span class="line"><span class="comment">        	&#125;*/</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// int[][]result=new int[list.size()][2];</span></span><br><span class="line">        <span class="comment">// for(int i=0;i&lt;list.size();i++)&#123;</span></span><br><span class="line">        <span class="comment">//     result[i][0]=list.get(i)[0];</span></span><br><span class="line">        <span class="comment">//     result[i][1]=list.get(i)[1];</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">        <span class="comment">// return result;下面就能替代这一堆</span></span><br><span class="line">        <span class="keyword">return</span> list.toArray(<span class="keyword">new</span> <span class="keyword">int</span>[list.size()][<span class="number">2</span>]);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里在我做题的过程中，开始我并没有用if-else里面的p数组，而是直接用了最外面的tmp，每次list.add(tmp),但是最后发现list里面存的值全都是一样的数组。<br><img src="https://img-blog.csdnimg.cn/20200216120951613.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>Debug模式下，在第二次循环结束后就已经不对劲了，我第一次存入的数组值怎么改变了呢。仔细观察右侧发现list存入的地址值是一样的，这么就说明：<br><strong>list里面存放的是对象的引用</strong>。<br>这之后我做了一个实验：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">	<span class="keyword">public</span> String name;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">int</span> age;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">			ArrayList&lt;User&gt;list=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">			User u=<span class="keyword">new</span> User();</span><br><span class="line">			u.name=<span class="string">"aaa"</span>;</span><br><span class="line">			u.age=<span class="number">12</span>;</span><br><span class="line">			list.add(u);</span><br><span class="line">			System.out.println(list.get(<span class="number">0</span>).name+<span class="string">"--"</span>+list.get(<span class="number">0</span>).age);</span><br><span class="line">			<span class="comment">//aaa--12</span></span><br><span class="line">			u.name=<span class="string">"bbb"</span>;</span><br><span class="line">			u.age=<span class="number">20</span>;</span><br><span class="line">			list.add(u);</span><br><span class="line">			System.out.println(<span class="string">"第一次"</span>+list.get(<span class="number">0</span>).name+<span class="string">"--"</span>+list.get(<span class="number">0</span>).age);</span><br><span class="line">			<span class="comment">//第一次bbb--20</span></span><br><span class="line">			System.out.println(<span class="string">"第二次"</span>+list.get(<span class="number">1</span>).name+<span class="string">"--"</span>+list.get(<span class="number">1</span>).age);	</span><br><span class="line">			<span class="comment">//第二次bbb--20	</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>说明list里面存放的的确是引用。<br>（刷题还刷出了原理，今天血赚）<strong>leetcode  17/100</strong></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

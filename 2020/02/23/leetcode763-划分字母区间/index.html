@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>leetcode763.划分字母区间 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="leetcode763. 划分字母区间
+
+字符串 S 由小写字母组成。我们要把这个字符串划分为尽可能多的片段，同一个字母只会出现在其中的一个片段。返回一个表示每个字符串片段的长度的列表。
+
+
+示例 ,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">leetcode763.划分字母区间</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">leetcode763.划分字母区间</h1>
+        <div class="stuff">
+            <span>二月 23, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="leetcode763-划分字母区间"><a href="#leetcode763-划分字母区间" class="headerlink" title="leetcode763. 划分字母区间"></a>leetcode763. 划分字母区间</h1><hr>
+<blockquote>
+<p>字符串 S 由小写字母组成。我们要把这个字符串划分为尽可能多的片段，同一个字母只会出现在其中的一个片段。返回一个表示每个字符串片段的长度的列表。</p>
+</blockquote>
+<blockquote>
+<p>示例 1:<br>输入: S = “ababcbacadefegdehijhklij”<br>输出: [9,7,8]<br>解释:<br>划分结果为 “ababcbaca”, “defegde”, “hijhklij”。<br>每个字母最多出现在一个片段中。<br>像 “ababcbacadefegde”, “hijhklij” 的划分是错误的，因为划分的片段数较少。</p>
+</blockquote>
+<h3 id="我的思路："><a href="#我的思路：" class="headerlink" title="我的思路："></a>我的思路：</h3><p>用一个map来记录字母出现的最后一次的位置，记做last。然后遍历这之前的所有字母，检查是否有值比这个last大，比这个大，说明这个字母不能作为分隔点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">partitionLabels</span><span class="params">(String S)</span> </span>&#123;</span><br><span class="line">      LinkedHashMap&lt;Character,Integer&gt;map=<span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line">       <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;S.length();i++)&#123;</span><br><span class="line">           	map.put(S.charAt(i), i);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">//如果用linkedHashMap下面这些排序的过程就能省略</span></span><br><span class="line">		<span class="comment">// List&lt;Map.Entry&lt;Character,Integer&gt;&gt;listEntry=new ArrayList&lt;&gt;();</span></span><br><span class="line">		<span class="comment">// listEntry.addAll(map.entrySet());</span></span><br><span class="line">		<span class="comment">// Collections.sort(listEntry, new Comparator&lt;Map.Entry&lt;Character, Integer&gt;&gt;()&#123;</span></span><br><span class="line">		<span class="comment">// @Override</span></span><br><span class="line">		<span class="comment">// public int compare(Map.Entry&lt;Character, Integer&gt; o1, Map.Entry&lt;Character, Integer&gt; o2) &#123;</span></span><br><span class="line">		<span class="comment">// 	// TODO Auto-generated method stub</span></span><br><span class="line">		<span class="comment">// 	return o1.getValue()-o2.getValue();</span></span><br><span class="line">		<span class="comment">// &#125;</span></span><br><span class="line">		<span class="comment">// &#125;);</span></span><br><span class="line">       ArrayList&lt;Integer&gt;result=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">       <span class="keyword">int</span> last=<span class="number">0</span>,flag=<span class="number">0</span>;</span><br><span class="line">       <span class="keyword">for</span>(Map.Entry&lt;Character,Integer&gt;entry:map.entrySet()) &#123;</span><br><span class="line">       	flag=<span class="number">0</span>;</span><br><span class="line">       	<span class="keyword">char</span> nowChar=entry.getKey();</span><br><span class="line">       	<span class="keyword">int</span> now=entry.getValue();</span><br><span class="line">           <span class="keyword">if</span>(last&gt;now)<span class="keyword">continue</span>;<span class="comment">//linkedHashMap才需要比较</span></span><br><span class="line">       	<span class="keyword">for</span>(<span class="keyword">int</span> i=last;i&lt;now;i++) &#123;</span><br><span class="line">       		<span class="keyword">if</span>(map.get(S.charAt(i))&gt;now) &#123;</span><br><span class="line">       			flag=<span class="number">1</span>;</span><br><span class="line">       			<span class="keyword">break</span>;</span><br><span class="line">       		&#125;</span><br><span class="line">       	&#125;</span><br><span class="line">       	<span class="keyword">if</span>(flag==<span class="number">1</span>)<span class="keyword">continue</span>;</span><br><span class="line">       	result.add(now-last+<span class="number">1</span>);</span><br><span class="line">       	last=now+<span class="number">1</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> result;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>我自己的写法中在for内部又多了一层for，这样浪费了时间，看看官方解法：</p>
+<h3 id="官方解法"><a href="#官方解法" class="headerlink" title="官方解法"></a>官方解法</h3><p>维护一个窗口，如果当前字母出现的最后一次的位置（last）比右边界大，那么需要拓展窗口，当 <strong>i</strong> 与 <strong>j</strong> 相遇的时候,说明窗口内部所有的字母都符合条件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">partitionLabels</span><span class="params">(String S)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] last = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; S.length(); ++i)</span><br><span class="line">            last[S.charAt(i) - <span class="string">'a'</span>] = i;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span> j = <span class="number">0</span><span class="comment">//右窗口;</span></span><br><span class="line">        <span class="keyword">int</span> anchor = <span class="number">0</span><span class="comment">//左窗口;</span></span><br><span class="line">        List&lt;Integer&gt; ans = <span class="keyword">new</span> ArrayList();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; S.length(); ++i) &#123;</span><br><span class="line">            j = Math.max(j, last[S.charAt(i) - <span class="string">'a'</span>]);</span><br><span class="line">            <span class="keyword">if</span> (i == j) &#123;</span><br><span class="line">                ans.add(j - anchor + <span class="number">1</span>);</span><br><span class="line">                anchor = i + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>leetcode 21/100</strong></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
