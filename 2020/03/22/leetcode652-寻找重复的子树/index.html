@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>leetcode652. 寻找重复的子树 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="leetcode652. 寻找重复的子树
+
+给定一棵二叉树，返回所有重复的子树。对于同一类的重复子树，你只需要返回其中任意一棵的根结点即可。
+
+
+两棵树重复是指它们具有相同的结构以及相同的结点值。
+,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">leetcode652. 寻找重复的子树</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">leetcode652. 寻找重复的子树</h1>
+        <div class="stuff">
+            <span>三月 22, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="leetcode652-寻找重复的子树"><a href="#leetcode652-寻找重复的子树" class="headerlink" title="leetcode652. 寻找重复的子树"></a>leetcode652. 寻找重复的子树</h1><hr>
+<blockquote>
+<p>给定一棵二叉树，返回所有重复的子树。对于同一类的重复子树，你只需要返回其中任意一棵的根结点即可。</p>
+</blockquote>
+<blockquote>
+<p>两棵树重复是指它们具有相同的结构以及相同的结点值。</p>
+</blockquote>
+<blockquote>
+<p>示例 1：</p>
+</blockquote>
+<blockquote>
+<pre><code>   1
+  / \
+ 2   3
+/   / \
+4   2   4
+/
+4</code></pre></blockquote>
+<blockquote>
+<p>下面是两个重复的子树：</p>
+<pre><code> 2
+/
+4</code></pre><p>和<br>     4<br>因此，你需要以列表的形式返回上述重复子树的根结点。</p>
+</blockquote>
+<h3 id="思路1暴力解决"><a href="#思路1暴力解决" class="headerlink" title="思路1暴力解决"></a>思路1暴力解决</h3><p>我没有想到下面的序列化解法.用hashmap存储已经访问过的节点,值作为key,value是一个list,包含所有值为key的节点,然后每次遍历到相同值得节点时候去访问list,看list里面的节点有没有和当前节点的结构一样的,没有一样的就加入ans中.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;TreeNode&gt; <span class="title">findDuplicateSubtrees</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        traverse(root);</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> HashMap&lt;Integer,ArrayList&gt;map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">public</span> ArrayList&lt;TreeNode&gt;ans=<span class="keyword">new</span> ArrayList();</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">traverse</span><span class="params">(TreeNode root)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root==<span class="keyword">null</span>)<span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">if</span>(!map.containsKey(root.val))&#123;</span><br><span class="line">            ArrayList&lt;TreeNode&gt;list=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">            list.add(root);</span><br><span class="line">            map.put(root.val,list);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            ArrayList&lt;TreeNode&gt;list=map.get(root.val);</span><br><span class="line">            <span class="keyword">for</span>(TreeNode node:list)&#123;</span><br><span class="line">                <span class="keyword">boolean</span> j=judge(node,root);</span><br><span class="line">                <span class="keyword">if</span>(j)&#123;</span><br><span class="line">                    <span class="keyword">boolean</span> j2=<span class="keyword">false</span>;</span><br><span class="line">                    <span class="comment">//防止加入结构一样的节点</span></span><br><span class="line">                    <span class="keyword">for</span>(TreeNode tn:ans)&#123;</span><br><span class="line">                        j2=judge(tn,root);</span><br><span class="line">                        <span class="keyword">if</span>(j2==<span class="keyword">true</span>)<span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">if</span>(!j2)ans.add(root);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            list.add(root);</span><br><span class="line">        &#125;</span><br><span class="line">        traverse(root.left);</span><br><span class="line">        traverse(root.right);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">judge</span><span class="params">(TreeNode nodeA,TreeNode nodeB)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(nodeA==nodeB&amp;&amp;nodeA==<span class="keyword">null</span>)<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">if</span>((nodeA==<span class="keyword">null</span>&amp;&amp;nodeB!=<span class="keyword">null</span>)||(nodeA!=<span class="keyword">null</span>&amp;&amp;nodeB==<span class="keyword">null</span>))<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">if</span>(nodeA.val==nodeB.val)&#123;</span><br><span class="line">            <span class="keyword">boolean</span> left=judge(nodeA.left,nodeB.left);</span><br><span class="line">            <span class="keyword">boolean</span> right=judge(nodeA.right,nodeB.right);</span><br><span class="line">            <span class="keyword">return</span> left&amp;&amp;right;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="解法二-序列化"><a href="#解法二-序列化" class="headerlink" title="解法二:序列化"></a>解法二:序列化</h3><p>把每个子树序列化变成字符串,这样就只需比较字符串是否一样就可以了.<br>下面还对他做了优化,map存储,key是字符串,value是他出现的次数,如果次数为2,那么就说明出现了两次,这样还能解决多次相同结构子树的判断.<br>并且后序遍历是自底向上的,只需要遍历n个节点. 而前序遍历和中序遍历都是自顶向下,如果这么构造序列会需要n2的复杂度.(这是新学到的)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">     <span class="function"><span class="keyword">public</span> List&lt;TreeNode&gt; <span class="title">findDuplicateSubtrees</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        Map&lt;String, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;String, Integer&gt;();</span><br><span class="line">        List&lt;TreeNode&gt; res = <span class="keyword">new</span> ArrayList&lt;TreeNode&gt;();</span><br><span class="line">        findDuplicateSubtrees(root, res, map);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> StringBuilder <span class="title">findDuplicateSubtrees</span><span class="params">(TreeNode root, List&lt;TreeNode&gt; res, Map&lt;String, Integer&gt; map)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> StringBuilder(<span class="string">"$"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        StringBuilder left = findDuplicateSubtrees(root.left, res, map);</span><br><span class="line">        StringBuilder right = findDuplicateSubtrees(root.right, res, map);</span><br><span class="line">        <span class="comment">//注意这里的加和顺序</span></span><br><span class="line">        <span class="comment">// StringBuilder treeKey = left.append(new StringBuilder(root.val + "")).append(right);</span></span><br><span class="line">        StringBuilder treeKey = <span class="keyword">new</span> StringBuilder(root.val + <span class="string">""</span>).append(left).append(right);</span><br><span class="line">        map.put(treeKey.toString(), map.getOrDefault(treeKey.toString(), <span class="number">0</span>) + <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span>(map.get(treeKey.toString()) == <span class="number">2</span>)&#123;</span><br><span class="line">            res.add(root);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> treeKey;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>leetcode 61/100</strong></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>leetcode5366. 检查网格中是否存在有效路径 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="leetcode5366. 检查网格中是否存在有效路径
+
+给你一个 m x n 的网格 grid。网格里的每个单元都代表一条街道。grid[i][j] 的街道可以是：
+
+
+1 表示连接左单元格和右单,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">leetcode5366. 检查网格中是否存在有效路径</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">leetcode5366. 检查网格中是否存在有效路径</h1>
+        <div class="stuff">
+            <span>三月 22, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="leetcode5366-检查网格中是否存在有效路径"><a href="#leetcode5366-检查网格中是否存在有效路径" class="headerlink" title="leetcode5366. 检查网格中是否存在有效路径"></a>leetcode5366. 检查网格中是否存在有效路径</h1><hr>
+<blockquote>
+<p>给你一个 m x n 的网格 grid。网格里的每个单元都代表一条街道。grid[i][j] 的街道可以是：</p>
+</blockquote>
+<blockquote>
+<p>1 表示连接左单元格和右单元格的街道。<br>2 表示连接上单元格和下单元格的街道。<br>3 表示连接左单元格和下单元格的街道。<br>4 表示连接右单元格和下单元格的街道。<br>5 表示连接左单元格和上单元格的街道。<br>6 表示连接右单元格和上单元格的街道。<img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9hc3NldHMubGVldGNvZGUtY24uY29tL2FsaXl1bi1sYy11cGxvYWQvdXBsb2Fkcy8yMDIwLzAzLzIxL21haW4ucG5n?x-oss-process=image/format,png" alt="在这里插入图片描述"><br>你最开始从左上角的单元格 (0,0) 开始出发，网格中的「有效路径」是指从左上方的单元格 (0,0) 开始、一直到右下方的 (m-1,n-1) 结束的路径。该路径必须只沿着街道走。</p>
+</blockquote>
+<blockquote>
+<p>注意：你 不能 变更街道。</p>
+</blockquote>
+<blockquote>
+<p>如果网格中存在有效的路径，则返回 true，否则返回 false 。</p>
+</blockquote>
+<h3 id="我的思路"><a href="#我的思路" class="headerlink" title="我的思路"></a>我的思路</h3><p>dfs查找，分6种情况，当前的是哪一种路，然后下一步要走哪一种路，如果不能走就不去搜索。第一次做这种题，代码还是很不好看的。一堆ifelse可以用switch优化。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasValidPath</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        visited=<span class="keyword">new</span> <span class="keyword">int</span>[grid.length][grid[<span class="number">0</span>].length];</span><br><span class="line">        visited[<span class="number">0</span>][<span class="number">0</span>]=<span class="number">1</span>;</span><br><span class="line">        dfs(grid,<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line">        <span class="comment">// for(int i=0;i&lt;visited.length;i++)&#123;</span></span><br><span class="line">        <span class="comment">//     for(int j=0;j&lt;visited[i].length;j++)&#123;</span></span><br><span class="line">        <span class="comment">//         System.out.print(visited[i][j]+" ");</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">//     System.out.println();</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">        <span class="keyword">return</span> flag;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">boolean</span> flag=<span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[][]visited;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span>[][]grid,<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">        <span class="comment">//System.out.println("x "+x+"y "+y);</span></span><br><span class="line">        <span class="keyword">if</span>(x==grid.length-<span class="number">1</span>&amp;&amp;y==grid[<span class="number">0</span>].length-<span class="number">1</span>)&#123;</span><br><span class="line">            flag=<span class="keyword">true</span>;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span>[][]direction=&#123;&#123;-<span class="number">1</span>,<span class="number">0</span>&#125;,&#123;<span class="number">0</span>,<span class="number">1</span>&#125;,&#123;<span class="number">1</span>,<span class="number">0</span>&#125;,&#123;<span class="number">0</span>,-<span class="number">1</span>&#125;&#125;;</span><br><span class="line">        <span class="keyword">int</span> now=grid[x][y];</span><br><span class="line"></span><br><span class="line">        <span class="comment">//////////////</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">4</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> nextX=x+direction[i][<span class="number">0</span>];</span><br><span class="line">            <span class="keyword">int</span> nextY=y+direction[i][<span class="number">1</span>];</span><br><span class="line">            <span class="comment">//System.out.println(nextX+" "+nextY);</span></span><br><span class="line">            <span class="keyword">if</span>(nextX&lt;<span class="number">0</span>||nextX&gt;grid.length-<span class="number">1</span>||nextY&lt;<span class="number">0</span>||nextY&gt;grid[<span class="number">0</span>].length-<span class="number">1</span>)</span><br><span class="line">              <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">int</span> nextP=grid[nextX][nextY];</span><br><span class="line">            <span class="keyword">if</span>(now==<span class="number">1</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>((i==<span class="number">0</span>||i==<span class="number">2</span>))</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">                <span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="keyword">if</span>(i==<span class="number">1</span>)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(nextP==<span class="number">2</span>||nextP==<span class="number">4</span>||nextP==<span class="number">6</span>)<span class="keyword">continue</span>;</span><br><span class="line">                    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(i==<span class="number">3</span>)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(nextP==<span class="number">2</span>||nextP==<span class="number">3</span>||nextP==<span class="number">5</span>)<span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(now==<span class="number">2</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>((i==<span class="number">1</span>||i==<span class="number">3</span>))</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">                <span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="keyword">if</span>(i==<span class="number">0</span>)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(nextP==<span class="number">1</span>||nextP==<span class="number">5</span>||nextP==<span class="number">6</span>)<span class="keyword">continue</span>;</span><br><span class="line">                        </span><br><span class="line">                    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(i==<span class="number">2</span>)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(nextP==<span class="number">1</span>||nextP==<span class="number">3</span>||nextP==<span class="number">4</span>)<span class="keyword">continue</span>;</span><br><span class="line">                        </span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(now==<span class="number">3</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>((i==<span class="number">0</span>||i==<span class="number">1</span>))</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">                <span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="keyword">if</span>(i==<span class="number">2</span>)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(nextP==<span class="number">1</span>||nextP==<span class="number">4</span>)<span class="keyword">continue</span>;</span><br><span class="line">                    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(i==<span class="number">3</span>)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(nextP==<span class="number">2</span>||nextP==<span class="number">5</span>)<span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(now==<span class="number">4</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>((i==<span class="number">0</span>||i==<span class="number">3</span>))</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">                <span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="keyword">if</span>(i==<span class="number">1</span>)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(nextP==<span class="number">2</span>||nextP==<span class="number">6</span>)<span class="keyword">continue</span>;</span><br><span class="line">                    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(i==<span class="number">2</span>)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(nextP==<span class="number">1</span>||nextP==<span class="number">3</span>)<span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(now==<span class="number">5</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>((i==<span class="number">2</span>||i==<span class="number">1</span>))</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">                <span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="keyword">if</span>(i==<span class="number">0</span>)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(nextP==<span class="number">1</span>||nextP==<span class="number">6</span>)<span class="keyword">continue</span>;</span><br><span class="line">                    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(i==<span class="number">3</span>)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(nextP==<span class="number">2</span>||nextP==<span class="number">3</span>)<span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(now==<span class="number">6</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>((i==<span class="number">2</span>||i==<span class="number">3</span>))</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">                <span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="keyword">if</span>(i==<span class="number">0</span>)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(nextP==<span class="number">1</span>||nextP==<span class="number">5</span>)<span class="keyword">continue</span>;</span><br><span class="line">                    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(i==<span class="number">1</span>)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(nextP==<span class="number">2</span>||nextP==<span class="number">4</span>)<span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(visited[nextX][nextY]==<span class="number">1</span>)</span><br><span class="line">              <span class="keyword">continue</span>;</span><br><span class="line">            visited[nextX][nextY]=<span class="number">1</span>;</span><br><span class="line">            dfs(grid,nextX,nextY);</span><br><span class="line">           &#125;</span><br><span class="line">       </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="优化方法"><a href="#优化方法" class="headerlink" title="优化方法"></a>优化方法</h3><p>评论区看到的<a href="https://leetcode-cn.com/problems/check-if-there-is-a-valid-path-in-a-grid/solution/5366-jian-cha-wang-ge-zhong-shi-fou-cun-zai-you-xi/" target="_blank" rel="noopener">检查网格中是否存在有效路径</a>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">int</span> dir[<span class="number">4</span>][<span class="number">2</span>]=&#123;&#123;<span class="number">-1</span>,<span class="number">0</span>&#125;,&#123;<span class="number">1</span>,<span class="number">0</span>&#125;,&#123;<span class="number">0</span>,<span class="number">-1</span>&#125;,&#123;<span class="number">0</span>,<span class="number">1</span>&#125;&#125;;<span class="comment">//定义四个方向，上下左右</span></span><br><span class="line">    <span class="comment">//建立形状和方向的映射</span></span><br><span class="line">    <span class="keyword">int</span> a[<span class="number">7</span>][<span class="number">2</span>] = &#123;&#123;<span class="number">0</span>,<span class="number">0</span>&#125;,&#123;<span class="number">2</span>,<span class="number">3</span>&#125;,&#123;<span class="number">0</span>,<span class="number">1</span>&#125;,&#123;<span class="number">1</span>,<span class="number">2</span>&#125;,&#123;<span class="number">1</span>,<span class="number">3</span>&#125;,&#123;<span class="number">0</span>,<span class="number">2</span>&#125;,&#123;<span class="number">0</span>,<span class="number">3</span>&#125;&#125;;</span><br><span class="line">    <span class="keyword">int</span> n,m;</span><br><span class="line">    <span class="keyword">bool</span> visited[<span class="number">500</span>][<span class="number">500</span>];</span><br><span class="line">    <span class="comment">//判读顶点是否规范</span></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">check</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(x &lt; <span class="number">0</span> || x &gt;= m || y&lt;<span class="number">0</span> || y &gt;= n)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt;&amp; grid)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(check(x,y)==<span class="literal">false</span>) <span class="keyword">return</span>;</span><br><span class="line">        visited[x][y] = <span class="literal">true</span>;<span class="comment">//标记访问</span></span><br><span class="line">        <span class="comment">// cout&lt;&lt;"x="&lt;&lt;x&lt;&lt;'\t'&lt;&lt;"y="&lt;&lt;y&lt;&lt;endl;</span></span><br><span class="line">        <span class="keyword">int</span> tmpdir = grid[x][y];<span class="comment">//取出该点的街道类型</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">2</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> t = a[tmpdir][i];</span><br><span class="line">            <span class="keyword">int</span> tx = dir[t][<span class="number">0</span>] + x;</span><br><span class="line">            <span class="keyword">int</span> ty = dir[t][<span class="number">1</span>] + y;         </span><br><span class="line">            <span class="comment">//(tx,ty)是下一跳可到达的点。需要再去判读，该点是否和</span></span><br><span class="line">            <span class="keyword">if</span>(check(tx,ty))&#123;</span><br><span class="line">                <span class="comment">// cout&lt;&lt;"tx="&lt;&lt;tx&lt;&lt;"\t"&lt;&lt;"ty="&lt;&lt;ty&lt;&lt;endl;</span></span><br><span class="line">                <span class="keyword">int</span> tmp = grid[tx][ty];<span class="comment">//得到下一步的街道类型</span></span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">0</span>;k&lt;<span class="number">2</span>;k++)&#123;</span><br><span class="line">                    <span class="keyword">int</span> p = a[tmp][k];<span class="comment">//得到该街道的两个方向</span></span><br><span class="line">                    <span class="keyword">if</span>(dir[t][<span class="number">0</span>] + dir[p][<span class="number">0</span>]==<span class="number">0</span> &amp;&amp; dir[t][<span class="number">1</span>]+dir[p][<span class="number">1</span>]==<span class="number">0</span>)&#123;<span class="comment">//判读是否可以走通</span></span><br><span class="line">                        <span class="keyword">if</span>(!visited[tx][ty])&#123;</span><br><span class="line">                            dfs(tx,ty,grid);</span><br><span class="line">                        &#125;                    </span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">hasValidPath</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt;&amp; grid)</span> </span>&#123;</span><br><span class="line">        m = grid.size();<span class="comment">//行数</span></span><br><span class="line">        n = grid[<span class="number">0</span>].size();<span class="comment">//列数</span></span><br><span class="line">        dfs(<span class="number">0</span>,<span class="number">0</span>,grid);</span><br><span class="line">        <span class="keyword">if</span>(visited[m<span class="number">-1</span>][n<span class="number">-1</span>] == <span class="literal">true</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;<span class="comment">//可到达</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>多用了一个数组表示当前的路的状态，再根据dir[t][0] + dir[p][0]==0 &amp;&amp; dir[t][1]+dir[p][1]==0判断能不能再继续走。</p>
+<p>这周的第三道题最后五分钟才写出来，还好也是三道题，基本目标达成了。<br><strong>leetcode 63/100</strong></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
