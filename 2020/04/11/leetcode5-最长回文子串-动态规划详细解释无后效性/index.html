@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>leetcode5. 最长回文子串-动态规划详细解释无后效性 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="leetcode5. 最长回文子串
+
+给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为 1000。
+
+
+示例 1：
+
+
+输入: “babad”输出: “bab”注意: “,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">leetcode5. 最长回文子串-动态规划详细解释无后效性</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">leetcode5. 最长回文子串-动态规划详细解释无后效性</h1>
+        <div class="stuff">
+            <span>四月 11, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="leetcode5-最长回文子串"><a href="#leetcode5-最长回文子串" class="headerlink" title="leetcode5. 最长回文子串"></a>leetcode5. 最长回文子串</h1><hr>
+<blockquote>
+<p>给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为 1000。</p>
+</blockquote>
+<blockquote>
+<p>示例 1：</p>
+</blockquote>
+<blockquote>
+<p>输入: “babad”<br>输出: “bab”<br>注意: “aba” 也是一个有效答案。</p>
+</blockquote>
+<blockquote>
+<p>示例 2：<br>输入: “cbbd”<br>输出: “bb”</p>
+</blockquote>
+<h3 id="动态规划的思路"><a href="#动态规划的思路" class="headerlink" title="动态规划的思路"></a>动态规划的思路</h3><p>一般题里问什么就把什么设成dp。<br>在当前状态，假设前面的状态全部计算出来了，即无后效性，再去寻找动态规划方程。<br>dp [i][j]表示字符串i~j是不是回文字符串。<br>初始化：dp[i][i]肯定是回文的，因为只有一个字符。<br>当遍历到一个状态的时候，这个状态是不是回文取决于两个：</p>
+<ul>
+<li>字符 <strong>i</strong> 和字符 <strong>j</strong> 相等，也就是说字符串的首尾是一样的。</li>
+<li>去掉首尾，也就是 <strong>i+1~j-1</strong> 是回文字符串。</li>
+<li>字符串长度为2，也就是说去掉首尾就没了，类似于 <strong>“bb”</strong> 这种需要特殊判断。<br>思路就绪了，开始写代码。<h3 id="先看我的错误版本："><a href="#先看我的错误版本：" class="headerlink" title="先看我的错误版本："></a>先看我的错误版本：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = s.length();</span><br><span class="line">        <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n][n];<span class="comment">//i~j 是否为回文，并且长度是多少</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            dp[i][i] = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        String ans = <span class="keyword">new</span> String(s.toCharArray(), <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; n; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (i + <span class="number">1</span> == j &amp;&amp; s.charAt(i) == s.charAt(j)) &#123;</span><br><span class="line">                    dp[i][j] = <span class="number">2</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (dp[i + <span class="number">1</span>][j - <span class="number">1</span>] &gt; <span class="number">0</span> &amp;&amp; s.charAt(i) == s.charAt(j)) &#123;</span><br><span class="line">                    dp[i][j] = dp[i + <span class="number">1</span>][j - <span class="number">1</span>] + <span class="number">2</span>;</span><br><span class="line">                &#125; </span><br><span class="line">                </span><br><span class="line">                <span class="keyword">if</span> (dp[i][j] &gt; ans.length()) &#123;</span><br><span class="line">                    ans = <span class="keyword">new</span> String(s.toCharArray(), i, j - i + <span class="number">1</span>);<span class="comment">//截取字符串</span></span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(<span class="string">"i = "</span>+i+<span class="string">" j = "</span>+j+<span class="string">" ans = "</span>+ans+<span class="string">" dp[i][j] = "</span>+dp[i][j]);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+乍一看不会出现问题，但是对于 <strong>“babab”</strong> ，结果是错误的，只能得到 <strong>“bab”</strong> 。来看原因。<h4 id="把dp数组画出来"><a href="#把dp数组画出来" class="headerlink" title="把dp数组画出来"></a>把dp数组画出来</h4>因为动态规划其实就是怎么填充dp数组，我们看看dp数组是怎么变化的。<br>初始状态：<br><img src="https://img-blog.csdnimg.cn/20200409205135233.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>这是在初始化之后的初始状态。<br>看看上面的代码是怎么填充dp数组的。<br><img src="https://img-blog.csdnimg.cn/20200409205438476.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>当 <strong>i=0,j=4</strong> 时，需要用到 <strong>dp[1][3]</strong> 。这是不对的，动态规划需要有无后效性，也就是说当前的状态不能用到之后的状态。<br>那么只能换一种填表方式。填表方式有很多，只要满足当前的状态不用到没填过的就行。我用的是下面这种。<br><img src="https://img-blog.csdnimg.cn/20200409205638524.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>这回就ok了，来看代码。优化了一部分,没必要每次截取，只需记录位置就行。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">if</span> (s.length() == <span class="number">0</span>) <span class="keyword">return</span> s;</span><br><span class="line">     <span class="keyword">int</span> n = s.length();</span><br><span class="line">     <span class="keyword">int</span>[][] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n][n];<span class="comment">//i~j 是否为回文，并且长度是多少</span></span><br><span class="line">     <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">         dp[i][i] = <span class="number">1</span>;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">int</span> left = <span class="number">0</span>;</span><br><span class="line">     <span class="keyword">int</span> right = <span class="number">0</span>;</span><br><span class="line">     <span class="keyword">int</span> max = <span class="number">0</span>;</span><br><span class="line">     <span class="keyword">for</span> (<span class="keyword">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">         <span class="keyword">for</span> (<span class="keyword">int</span> j = n - <span class="number">1</span>; j &gt; i; j--) &#123;</span><br><span class="line">             <span class="keyword">if</span> (i + <span class="number">1</span> == j &amp;&amp; s.charAt(i) == s.charAt(j)) &#123;</span><br><span class="line">                 dp[i][j] = <span class="number">2</span>;</span><br><span class="line">             &#125;</span><br><span class="line">             <span class="keyword">if</span> (dp[i + <span class="number">1</span>][j - <span class="number">1</span>] &gt; <span class="number">0</span> &amp;&amp; s.charAt(i) == s.charAt(j)) &#123;</span><br><span class="line">                 dp[i][j] = dp[i + <span class="number">1</span>][j - <span class="number">1</span>] + <span class="number">2</span>;</span><br><span class="line">             &#125; </span><br><span class="line">             </span><br><span class="line">             <span class="keyword">if</span> (dp[i][j] &gt; max) &#123;</span><br><span class="line">                 max = dp[i][j];</span><br><span class="line">                 left = i;</span><br><span class="line">                 right = j;</span><br><span class="line">             &#125;</span><br><span class="line">             <span class="comment">//System.out.println("i = "+i+" j = "+j+" ans = "+ans+" dp[i][j] = "+dp[i][j]);</span></span><br><span class="line">         &#125;</span><br><span class="line">         </span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span> s.substring(left, right + <span class="number">1</span>);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+这回动态规划的理解更进一步了。<br>leetcode上面类似的字符串题：<br>字符串三连<br><a href="https://leetcode-cn.com/problems/longest-palindromic-subsequence//" target="_blank" rel="noopener">最长回文子序列</a><br><a href="https://leetcode-cn.com/problems/palindromic-substrings//" target="_blank" rel="noopener">回文子串</a><br><a href="https://leetcode-cn.com/problems/longest-palindromic-substring//" target="_blank" rel="noopener">最长回文子串</a><br><strong>leetcode 75/100</strong></li>
+</ul>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
