@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>leetcode周赛5418.二叉树中的伪回文路径 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="leetcode周赛5418.二叉树中的伪回文路径
+
+给你一棵二叉树，每个节点的值为 1 到 9 。我们称二叉树中的一条路径是 「伪回文」的，当它满足：路径经过的所有节点值的排列中，存在一个回文序列,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">leetcode周赛5418.二叉树中的伪回文路径</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">leetcode周赛5418.二叉树中的伪回文路径</h1>
+        <div class="stuff">
+            <span>六月 26, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="leetcode周赛5418-二叉树中的伪回文路径"><a href="#leetcode周赛5418-二叉树中的伪回文路径" class="headerlink" title="leetcode周赛5418.二叉树中的伪回文路径"></a>leetcode周赛5418.二叉树中的伪回文路径</h1><hr>
+<blockquote>
+<p>给你一棵二叉树，每个节点的值为 1 到 9 。我们称二叉树中的一条路径是 「伪回文」的，当它满足：路径经过的所有节点值的排列中，存在一个回文序列。</p>
+</blockquote>
+<blockquote>
+<p>请你返回从根到叶子节点的所有路径中 伪回文 路径的数目。</p>
+</blockquote>
+<blockquote>
+<p>示例1<br><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9hc3NldHMubGVldGNvZGUtY24uY29tL2FsaXl1bi1sYy11cGxvYWQvdXBsb2Fkcy8yMDIwLzA1LzIzL3BhbGluZHJvbWljX3BhdGhzXzEucG5n?x-oss-process=image/format,png" alt="在这里插入图片描述"><br>输入：root = [2,3,1,3,1,null,1]<br>输出：2<br>解释：上图为给定的二叉树。总共有 3 条从根到叶子的路径：红色路径 [2,3,3] ，绿色路径 [2,1,1] 和路径 [2,3,1] 。<br>     在这些路径中，只有红色和绿色的路径是伪回文路径，因为红色路径 [2,3,3] 存在回文排列 [3,2,3] ，绿色路径 [2,1,1] 存在回文排列 [1,2,1] 。</p>
+</blockquote>
+<h3 id="dfs"><a href="#dfs" class="headerlink" title="dfs"></a>dfs</h3><p>具体思路见注释。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="comment">/*因为数字顺序可以调换，所以只需要看序列里面的每个数字出现的次数，是奇数，偶数就行</span></span><br><span class="line"><span class="comment">    回文串里面奇数次数只能最多有一个，偶数随意</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="comment">//开始没看到只有九个数字，所以用了map，和count计数，我怕数字多了，map遍历上面浪费时间</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> count = <span class="number">0</span>;<span class="comment">//记录奇数出现几次，偶数出现几次</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> HashMap&lt;Integer,Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;(<span class="number">1024</span>);</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">pseudoPalindromicPaths</span> <span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        dfs(root);</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> v = map.getOrDefault(root.val,<span class="number">0</span>);</span><br><span class="line">        v++;</span><br><span class="line">        <span class="keyword">int</span> t = count;</span><br><span class="line">        <span class="keyword">if</span> ((v &amp; <span class="number">1</span>) == <span class="number">1</span>) &#123;<span class="comment">//当前数字出现次数是奇数</span></span><br><span class="line">            count++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;<span class="comment">//是偶数</span></span><br><span class="line">            count--;</span><br><span class="line">        &#125;</span><br><span class="line">        map.put(root.val,v);</span><br><span class="line">        <span class="keyword">if</span> (root.left == <span class="keyword">null</span> &amp;&amp; root.right == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">//到达叶节点</span></span><br><span class="line">            <span class="keyword">if</span> (count &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">                ans++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (root.left != <span class="keyword">null</span>)</span><br><span class="line">        dfs(root.left);</span><br><span class="line">        <span class="keyword">if</span> (root.right != <span class="keyword">null</span>)</span><br><span class="line">        dfs(root.right);</span><br><span class="line">        <span class="comment">//回溯，恢复状态</span></span><br><span class="line">        map.put(root.val,v - <span class="number">1</span>);</span><br><span class="line">        count = t;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这次周赛半个小时就写完前三题，第四题只知道是dp，怎么dp就不清楚了。残念~。<br><strong>leetcode 104</strong></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
