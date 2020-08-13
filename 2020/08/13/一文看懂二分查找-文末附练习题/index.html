@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>一文看懂二分查找(文末附练习题) - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="二分查找
+每次写二分我都得找几个小时的bug，写此篇记录一下到底该怎么写二分
+
+遇到查找就两种，哈希或二分，本文介绍二分查找。简单的二分查找很好写，但是细节部分很多。对于一个数组[1,2,3,4,5,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">一文看懂二分查找(文末附练习题)</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">一文看懂二分查找(文末附练习题)</h1>
+        <div class="stuff">
+            <span>八月 13, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找</h1><blockquote>
+<p>每次写二分我都得找几个小时的bug，写此篇记录一下到底该怎么写二分</p>
+</blockquote>
+<p>遇到查找就两种，哈希或二分，本文介绍二分查找。<br>简单的二分查找很好写，但是细节部分很多。<br>对于一个数组[1,2,3,4,5,6,7,8,9]查找7 。思路是这样的：<br>有high和low两个指针，分别指向末尾和头部，每次取中间位置的元素，如果这个值大了，就让high=mid-1.如果值小了就让low=mid+1，循环下去，就能找到值，当low&gt;high时候跳出循环。时间复杂度是logn，空间复杂度是常数。<br><strong>一定要注意二分只能对有序数组操作</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//基础的二分代码，本文均采用升序数组</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">binSearch</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> start, <span class="keyword">int</span> end, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//左闭右闭区间[0,arr.length - 1]</span></span><br><span class="line">        <span class="keyword">int</span> low = start, high = end;</span><br><span class="line">        <span class="keyword">while</span> (low &lt;= high) &#123;</span><br><span class="line">            <span class="keyword">int</span> mid = (low + high) / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span> (arr[mid] == target) <span class="keyword">return</span> mid;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (arr[mid] &lt; target)&#123;</span><br><span class="line">                low  = mid + <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                high = mid - <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>上面的区间是[start,end]，有些写法是[start,end)，差异会很大，比如循环条件是low&lt;high,high=mid，本文都采用第一种方式<br>  这种二分只能应对最简单的情况，但是做题遇到的会比这种花哨的多。</p>
+<h3 id="第一种：第一个大于等于查找值的元素"><a href="#第一种：第一个大于等于查找值的元素" class="headerlink" title="第一种：第一个大于等于查找值的元素"></a>第一种：第一个大于等于查找值的元素</h3><p>  对于数组{2,5,6,6,8,12,15}，查找9返回12，查找15返回15，查询6返回index=2的6<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">binarySearchR</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> start, <span class="keyword">int</span> end , <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">      <span class="comment">//第一个大于等于给定值的元素</span></span><br><span class="line">      <span class="keyword">int</span> left = start, right = end, mid = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">          mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">          <span class="keyword">if</span> (arr[mid] &lt; target) &#123;</span><br><span class="line">              left = mid + <span class="number">1</span>;</span><br><span class="line">          &#125; <span class="keyword">else</span> <span class="keyword">if</span> (arr[mid] &gt;= target)&#123;</span><br><span class="line">          <span class="comment">//如果当前元素前一个比给定值小，说明这个是第一个大于等于给定值的元素，</span></span><br><span class="line">          <span class="comment">//如果这个已经是最开始的元素，直接返回</span></span><br><span class="line">              <span class="keyword">if</span> (mid == <span class="number">0</span> || arr[mid - <span class="number">1</span>] &lt; target) <span class="keyword">return</span> mid;</span><br><span class="line">              <span class="keyword">else</span> right = mid - <span class="number">1</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125; </span><br><span class="line">      <span class="keyword">return</span> - <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="第二种：最后一个小于等于查找值的元素"><a href="#第二种：最后一个小于等于查找值的元素" class="headerlink" title="第二种：最后一个小于等于查找值的元素"></a>第二种：最后一个小于等于查找值的元素</h3><p>  对于数组{2,5,6,6,8,12,15}，查找9返回8，查找15返回15，查询6返回index=3的6<br>  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">binarySearchL</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> start, <span class="keyword">int</span> end , <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">      <span class="comment">//最后一个小于等于给定值</span></span><br><span class="line">      <span class="keyword">int</span> left = start, right = end, mid = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">          mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">          <span class="keyword">if</span> (arr[mid] &gt; target) &#123;</span><br><span class="line">              right = mid - <span class="number">1</span>;</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="comment">//基本原理和上一个差不多，都是比较当前位置和下一个的关系</span></span><br><span class="line">              <span class="keyword">if</span> (mid == end || arr[mid + <span class="number">1</span>] &gt; target) <span class="keyword">return</span> mid;</span><br><span class="line">              <span class="keyword">else</span> left = mid + <span class="number">1</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125; </span><br><span class="line">      <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="binarySearch源码"><a href="#binarySearch源码" class="headerlink" title="binarySearch源码"></a>binarySearch源码</h3><p>java的Arrays包封装了一个binarySearch方法。下面是他的源码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">binarySearch0</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> fromIndex, <span class="keyword">int</span> toIndex, <span class="keyword">int</span> key)</span> </span>&#123;</span><br><span class="line"><span class="comment">//传进来是[0,arr.length]，所以下面high会减1</span></span><br><span class="line">        <span class="keyword">int</span> low = fromIndex;</span><br><span class="line">        <span class="keyword">int</span> high = toIndex - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(low &lt;= high) &#123;</span><br><span class="line">            <span class="keyword">int</span> mid = low + high &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">int</span> midVal = a[mid];</span><br><span class="line">            <span class="keyword">if</span> (midVal &lt; key) &#123;</span><br><span class="line">                low = mid + <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (midVal &lt;= key) &#123;</span><br><span class="line">                    <span class="keyword">return</span> mid;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                high = mid - <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">//System.out.println("low = "+low+" high = "+high);</span></span><br><span class="line">        <span class="keyword">return</span> -(low + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>最后返回太妙了，负数代表没有这个数，low+1表示这个数应该存在的位置，其他的都和最开始的代码一样。不过这种写法无法应对有重复数字的查询。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>二分查找要形成自己的写法，不要今天是low&lt;high，明天是low&lt;=high，这样很容易就会搞混，细节部分要保持始终如一。</li>
+<li>源码是最好的算法。<br>先总结这么多，其他的情况之后再补充。</li>
+</ul>
+<p>最后附上几个二分查找题：<br><a href="https://leetcode-cn.com/problems/minimum-size-subarray-sum/" target="_blank" rel="noopener">209长度最小的子数组</a><br><a href="https://leetcode-cn.com/problems/sum-of-mutated-array-closest-to-target/" target="_blank" rel="noopener">1300转变数组后最接近目标值的数组和</a><br><a href="https://leetcode-cn.com/problems/minimum-number-of-days-to-make-m-bouquets/" target="_blank" rel="noopener">1482制作m束花的最小天数</a></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

@@ -10,7 +10,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="peony,"> 
-    
+    <meta name="description" content="leetcode124. 二叉树中的最大路径和
+
+给定一个非空二叉树，返回其最大路径和。本题中，路径被定义为一条从树中任意节点出发，达到任意节点的序列。该路径至少包含一个节点，且不一定经过根节点。
+,"> 
     <meta name="author" content="peony"> 
     <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon63.png"> 
@@ -65,7 +68,40 @@
 
         </div>
         <div class="content markdown">
-            
+            <h1 id="leetcode124-二叉树中的最大路径和"><a href="#leetcode124-二叉树中的最大路径和" class="headerlink" title="leetcode124. 二叉树中的最大路径和"></a>leetcode124. 二叉树中的最大路径和</h1><hr>
+<blockquote>
+<p>给定一个非空二叉树，返回其最大路径和。<br>本题中，路径被定义为一条从树中任意节点出发，达到任意节点的序列。该路径至少包含一个节点，且不一定经过根节点。</p>
+</blockquote>
+<blockquote>
+<p>示例 1:<br>输入: [1,2,3]</p>
+</blockquote>
+<pre><code>  1
+ / \
+2   3</code></pre><blockquote>
+<p>输出: 6</p>
+</blockquote>
+<blockquote>
+<p>示例 2:</p>
+</blockquote>
+<blockquote>
+<p>输入: [-10,9,20,null,null,15,7]</p>
+</blockquote>
+<pre><code> -10
+ / \
+9  20
+  /  \
+ 15   7</code></pre><blockquote>
+<p>输出: 42</p>
+</blockquote>
+<h3 id="递归"><a href="#递归" class="headerlink" title="递归"></a>递归</h3><p>理解了递归的原理，就可以很快写出这种题。<br>自底向上。考虑某个子树，他的子节点是n，当前最大的路径只有四种情况：</p>
+<ul>
+<li>n+left</li>
+<li>n+right</li>
+<li>n</li>
+<li>n+left+right<br>递归函数返回最大值 ，注意最后一个值不能返回，因为不能和上面一个节点构成路径。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> max = Integer.MIN_VALUE;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxPathSum</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        dfs(root);</span><br><span class="line">        <span class="keyword">return</span> max;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">dfs</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//返回当前子树的最大值</span></span><br><span class="line">        <span class="keyword">if</span> (root == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> left = dfs(root.left);</span><br><span class="line">        <span class="keyword">int</span> right = dfs(root.right);</span><br><span class="line">        <span class="comment">//当前节点为n,对于当前节点来说，最大值可以为n+left,n+right,n,n+left+right</span></span><br><span class="line">        <span class="comment">//上面四项中的一个，但是返回是不能返回第四个的，那种路径是不成立的</span></span><br><span class="line">        <span class="keyword">int</span> p = Math.max(root.val,Math.max(root.val+left,root.val+right));</span><br><span class="line">        max = Math.max(max,p);</span><br><span class="line">        <span class="keyword">int</span> p2 = Math.max(p,root.val+left+right);</span><br><span class="line">        max = Math.max(max,p2);</span><br><span class="line">        <span class="keyword">return</span> p;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<strong>leetcode 113</strong></li>
+</ul>
+
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
                 <source type="audio/mpeg" src="">

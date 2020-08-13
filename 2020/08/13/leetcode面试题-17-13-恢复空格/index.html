@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>leetcode面试题 17.13. 恢复空格 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="面试题 17.13. 恢复空格
+
+哦，不！你不小心把一个长篇文章中的空格、标点都删掉了，并且大写也弄成了小写。像句子”I reset the computer. It still didn’t bo,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">leetcode面试题 17.13. 恢复空格</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">leetcode面试题 17.13. 恢复空格</h1>
+        <div class="stuff">
+            <span>八月 13, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="面试题-17-13-恢复空格"><a href="#面试题-17-13-恢复空格" class="headerlink" title="面试题 17.13. 恢复空格"></a>面试题 17.13. 恢复空格</h1><hr>
+<blockquote>
+<p>哦，不！你不小心把一个长篇文章中的空格、标点都删掉了，并且大写也弄成了小写。像句子”I reset the computer. It still didn’t boot!”已经变成了”iresetthecomputeritstilldidntboot”。在处理标点符号和大小写之前，你得先把它断成词语。当然了，你有一本厚厚的词典dictionary，不过，有些词没在词典里。假设文章用sentence表示，设计一个算法，把文章断开，要求未识别的字符最少，返回未识别的字符数。</p>
+</blockquote>
+<blockquote>
+<p>注意：本题相对原题稍作改动，只需返回未识别的字符数</p>
+</blockquote>
+<blockquote>
+<p>示例：<br>输入：<br>dictionary = [“looked”,”just”,”like”,”her”,”brother”]<br>sentence = “jesslookedjustliketimherbrother”<br>输出： 7<br>解释： 断句后为”jess looked just like tim her brother”，共7个未识别字符。</p>
+</blockquote>
+<blockquote>
+<p>提示：<br>0 &lt;= len(sentence) &lt;= 1000<br>dictionary中总字符数不超过 150000。<br>你可以认为dictionary和sentence中只包含小写字母。</p>
+</blockquote>
+<h3 id="动态规划"><a href="#动态规划" class="headerlink" title="动态规划"></a>动态规划</h3><p>首先先处理字典，我选择了用hashmap，首字母对应字符串的形式，还有用字典树的，不过字典树写起来有一些复杂。<br>动态规划的思路：一个一维dp数组，dp[i]表示以i结尾能匹配的最大字符数量。<br>对于每一个字母，都去字典里面查找有没有合适的单词。</p>
+<ul>
+<li>如果找到了一个单词，就让（i+单词长度）位置的dp为当前能匹配的最大字符数量，也就是 <strong>dp[i+length-1] = max(dp[i-1]+length,dp[i+length-1])</strong> .其中dp[i-1]用来表示已经匹配的最大长度。注意是最大长度，所以要取max。</li>
+<li>如果没有对应的单词，就让 <strong>dp[i] = max(dp[i-1],dp[i])</strong> 。这里也要取最大值。<br>下面是填表的过程，上面这些公式都是填表时候一起出来的，而不是先想出来公式，再去填表，做了几道看似困难的dp，我都是这么做出来的，所以建议自己画个表试试看。<br><img src="https://img-blog.csdnimg.cn/20200709105406130.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>下面是代码,show的位置可以很清晰的看出数组的变化情况。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">respace</span><span class="params">(String[] dictionary, String sentence)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (sentence.length() == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[sentence.length()];</span><br><span class="line">        <span class="comment">//处理字典</span></span><br><span class="line">        HashMap&lt;Character,ArrayList&lt;String&gt;&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;(<span class="number">1024</span>);</span><br><span class="line">        <span class="keyword">for</span> (String s : dictionary) &#123;</span><br><span class="line">            ArrayList&lt;String&gt; list = map.getOrDefault(s.charAt(<span class="number">0</span>),<span class="keyword">new</span> ArrayList());</span><br><span class="line">            list.add(s);</span><br><span class="line">            map.put(s.charAt(<span class="number">0</span>),list);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//处理结束，开始执行算法</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; sentence.length(); i++) &#123;</span><br><span class="line">            <span class="keyword">char</span> c = sentence.charAt(i);</span><br><span class="line">            ArrayList&lt;String&gt; list = map.get(c);</span><br><span class="line">            <span class="keyword">if</span> (list != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">//对于这个首字母的每一个单词都比较</span></span><br><span class="line">                <span class="keyword">for</span> (String s : list) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (i + s.length() &lt;= sentence.length()) &#123;</span><br><span class="line">                        String t = sentence.substring(i,i + s.length());</span><br><span class="line">                        <span class="keyword">if</span> (t.equals(s)) &#123;</span><br><span class="line">                            <span class="keyword">int</span> n = i + s.length() - <span class="number">1</span>;</span><br><span class="line">                            <span class="keyword">if</span> (i &gt;= <span class="number">1</span>) &#123;</span><br><span class="line">                                dp[n] = Math.max(dp[i - <span class="number">1</span>] + s.length(), dp[n]);</span><br><span class="line">                            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                                dp[n] = s.length();</span><br><span class="line">                            &#125;</span><br><span class="line">                            <span class="comment">//show(dp);</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (i &gt; <span class="number">0</span>)</span><br><span class="line">            dp[i] = Math.max(dp[i - <span class="number">1</span>],dp[i]);</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//show(dp);</span></span><br><span class="line">        <span class="comment">//最后一个位置的值表示能匹配的最多的字母数量，所以减一下就行</span></span><br><span class="line">        <span class="keyword">return</span> sentence.length() - dp[dp.length - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i : arr) &#123;</span><br><span class="line">            System.out.print(i + <span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<strong>leetcode 117</strong></li>
+</ul>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

@@ -10,7 +10,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="peony,"> 
-    
+    <meta name="description" content="leetcode990. 等式方程的可满足性
+
+给定一个由表示变量之间关系的字符串方程组成的数组，每个字符串方程 equations[i] 的长度为 4，并采用两种不同的形式之一：”a==b” 或 ,"> 
     <meta name="author" content="peony"> 
     <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon63.png"> 
@@ -65,7 +67,35 @@
 
         </div>
         <div class="content markdown">
-            
+            <h1 id="leetcode990-等式方程的可满足性"><a href="#leetcode990-等式方程的可满足性" class="headerlink" title="leetcode990. 等式方程的可满足性"></a>leetcode990. 等式方程的可满足性</h1><hr>
+<blockquote>
+<p>给定一个由表示变量之间关系的字符串方程组成的数组，每个字符串方程 equations[i] 的长度为 4，并采用两种不同的形式之一：”a==b” 或 “a!=b”。在这里，a 和 b 是小写字母（不一定不同），表示单字母变量名。</p>
+</blockquote>
+<blockquote>
+<p>只有当可以将整数分配给变量名，以便满足所有给定的方程时才返回 true，否则返回 false。 </p>
+</blockquote>
+<blockquote>
+<p>示例 1：<br>输入：[“a==b”,”b!=a”]<br>输出：false<br>解释：如果我们指定，a = 1 且 b = 1，那么可以满足第一个方程，但无法满足第二个方程。没有办法分配变量同时满足这两个方程。</p>
+</blockquote>
+<blockquote>
+<p>示例 2：<br>输出：[“b==a”,”a==b”]<br>输入：true<br>解释：我们可以指定 a = 1 且 b = 1 以满足满足这两个方程。</p>
+</blockquote>
+<blockquote>
+<p>示例 3：<br>输入：[“a==b”,”b==c”,”a==c”]<br>输出：true</p>
+</blockquote>
+<blockquote>
+<p>示例 4：<br>输入：[“a==b”,”b!=c”,”c==a”]<br>输出：false</p>
+</blockquote>
+<blockquote>
+<p>示例 5：<br>输入：[“c==c”,”b==d”,”x!=z”]<br>输出：true</p>
+</blockquote>
+<blockquote>
+<p>提示：<br>1 &lt;= equations.length &lt;= 500<br>equations[i].length == 4<br>equations[i][0] 和 equations[i][3] 是小写字母<br>equations[i][1] 要么是 ‘=’，要么是 ‘!’<br>equations[i][2] 是 ‘=’</p>
+</blockquote>
+<h3 id="图的想法"><a href="#图的想法" class="headerlink" title="图的想法"></a>图的想法</h3><p>不会并查集，所以一开始也没想到，倒是想出来用图怎么做。<br>便利一遍相等的，构建一个图。在遍历不相等的，如果能到达，说明不符合要求。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equationsPossible</span><span class="params">(String[] equations)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[][] map = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>][<span class="number">26</span>];<span class="comment">//只有小写字母，用数组存</span></span><br><span class="line">        ArrayList&lt;Integer&gt; notEqu = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="comment">//构建图</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; equations.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (equations[i].charAt(<span class="number">1</span>) == <span class="string">'='</span>) &#123;</span><br><span class="line">                <span class="keyword">char</span> left  = equations[i].charAt(<span class="number">0</span>);</span><br><span class="line">                <span class="keyword">char</span> right = equations[i].charAt(<span class="number">3</span>);</span><br><span class="line">                <span class="keyword">if</span> (left != right) &#123;</span><br><span class="line">                    map[left - <span class="string">'a'</span>][right - <span class="string">'a'</span>] = <span class="number">1</span>;</span><br><span class="line">                    map[right - <span class="string">'a'</span>][left - <span class="string">'a'</span>] = <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                notEqu.add(i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//看不相等的</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; notEqu.size(); i++) &#123;</span><br><span class="line">            String s = equations[notEqu.get(i)];</span><br><span class="line">            <span class="keyword">int</span> start = s.charAt(<span class="number">0</span>) - <span class="string">'a'</span>, end = s.charAt(<span class="number">3</span>) - <span class="string">'a'</span>;</span><br><span class="line">            <span class="keyword">if</span> (search(map,start,end,<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">26</span>])) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">search</span><span class="params">(<span class="keyword">int</span>[][] map, <span class="keyword">int</span> start, <span class="keyword">int</span> end, <span class="keyword">int</span>[] visited)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//看不相等的能不能到达，比如a==b,c==b,如果有c!=a就不对了，返回true代表能到达</span></span><br><span class="line">        <span class="keyword">if</span> (start == end) <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">int</span> next = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">boolean</span> flag = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; map[start].length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (map[start][i] != <span class="number">0</span> &amp;&amp; visited[i] != <span class="number">1</span>) &#123;</span><br><span class="line">                visited[i] = <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">if</span> (i == end) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (search(map,i,end,visited)) <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                visited[i] = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>leetcode 109</strong></p>
+
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
                 <source type="audio/mpeg" src="">
