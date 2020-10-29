@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>wireShark抓取本地http包，分析状态 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="WireShark使用正常的WireShark是无法抓取localhost包的，所以需要安个插件。https://github.com/nmap/npcap。正常对应着自己的需求安装就行了。
+抓包首,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">wireShark抓取本地http包，分析状态</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">wireShark抓取本地http包，分析状态</h1>
+        <div class="stuff">
+            <span>十月 29, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="WireShark使用"><a href="#WireShark使用" class="headerlink" title="WireShark使用"></a>WireShark使用</h1><p>正常的WireShark是无法抓取localhost包的，所以需要安个插件。<a href="https://github.com/nmap/npcap" target="_blank" rel="noopener">https://github.com/nmap/npcap</a>。<br>正常对应着自己的需求安装就行了。</p>
+<h1 id="抓包"><a href="#抓包" class="headerlink" title="抓包"></a>抓包</h1><p>首先是用postman发送http包。<br><img src="https://img-blog.csdnimg.cn/2020101420234289.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>postman对于Connection项只能关掉原来的，新写一个。<br>然后我们看第一次connection:close的情况。</p>
+<h2 id="Connection-Close"><a href="#Connection-Close" class="headerlink" title="Connection:Close"></a>Connection:Close</h2><p><img src="https://img-blog.csdnimg.cn/20201014203025592.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>最上面的过滤器内容是 <code>ip.addr == 127.0.0.1 &amp;&amp; ip.dst == 127.0.0.1 &amp;&amp; tcp.port == 8888</code>。代表只接受源ip和目的ip是环回地址，并且端口号是8888（服务器）的数据包。<br>前三个tcp是三次握手，然后收到了一个8830（postman发送的）http协议包，然后根据8888（服务器）返回一个tcp包表示我收到了。然后服务器把得到的数据封装成http返回，最后再收到8830的确认包。然后由于不是持久连接，四次挥手结束过程。<br>下图是服务器第一次收到的http信息。<br><img src="https://img-blog.csdnimg.cn/20201014203554997.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>包里面显示Connection是Close。<br><strong>测试结果Connection:Close，耗时0.125304s</strong></p>
+<h2 id="Connection-keep-alive"><a href="#Connection-keep-alive" class="headerlink" title="Connection:keep-alive"></a>Connection:keep-alive</h2><p><img src="https://img-blog.csdnimg.cn/2020101422311098.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>除了深颜色的部分，其他都和上一种情况一样。选出第一个黑色的tcp包查看一下内容。<br>首先，根据端口号，是先由客户端发起的（8348端口），长度是45。点开查看数据包，数据只带了一个00.<br><img src="https://img-blog.csdnimg.cn/2020101422374119.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>之后每一个由8348（客户端）发送的数据包相差时间都近似于1s，一共发送了四次。<br><strong>测试结果：Connection:keep-alive，耗时5.103102s</strong></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>keep-alive字段不会立即断开tcp连接。</li>
+<li>keep-alive会间隔一段时间连续发送四个数据包。（可能根据不同主机的设置，间隔时间和发送数据包数量不同）</li>
+<li>连接的终止是由客户端先发起的。<blockquote>
+<p>写一天代码了，晚上放松一下，探索一下未知的领域</p>
+</blockquote>
+</li>
+</ul>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

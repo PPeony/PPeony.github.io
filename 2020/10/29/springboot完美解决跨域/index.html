@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>springboot完美解决跨域 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="被跨域折磨了两天，可算是整明白了，记录一下各种配置。
+1.corsFilter网上各种方法都不好使，只有这么一种可以,可能是哪里的配置问题。
+1234567891011121314151617@Co,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">springboot完美解决跨域</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">springboot完美解决跨域</h1>
+        <div class="stuff">
+            <span>十月 29, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <p>被跨域折磨了两天，可算是整明白了，记录一下各种配置。</p>
+<h3 id="1-corsFilter"><a href="#1-corsFilter" class="headerlink" title="1.corsFilter"></a>1.corsFilter</h3><p>网上各种方法都不好使，只有这么一种可以,可能是哪里的配置问题。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CorsConfig</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CorsFilter <span class="title">corsFilter2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        UrlBasedCorsConfigurationSource source = <span class="keyword">new</span> UrlBasedCorsConfigurationSource();</span><br><span class="line">        <span class="comment">// 允许跨域</span></span><br><span class="line">        CorsConfiguration config = <span class="keyword">new</span> CorsConfiguration();</span><br><span class="line">        <span class="comment">// 设置允许跨域的域名，如：http://localhost:9004 如果为*号，则表示允许所有的</span></span><br><span class="line">        config.setAllowCredentials(<span class="keyword">true</span>);</span><br><span class="line">        config.addAllowedOrigin(<span class="string">"*"</span>);</span><br><span class="line">        config.addAllowedHeader(<span class="string">"*"</span>);</span><br><span class="line">        config.addAllowedMethod(<span class="string">"*"</span>);</span><br><span class="line">        config.setMaxAge(<span class="number">3600L</span>);</span><br><span class="line">        source.registerCorsConfiguration(<span class="string">"/**"</span>, config);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> CorsFilter(source);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-后端controller对cookie的配置"><a href="#2-后端controller对cookie的配置" class="headerlink" title="2.后端controller对cookie的配置"></a>2.后端controller对cookie的配置</h3><p>注意添加cookie时要，设置cookie的各种属性。细节在代码里面。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/test"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/addCookie"</span>)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">addCookie</span><span class="params">(@RequestParam(<span class="string">"name"</span>)</span> String name,@<span class="title">RequestParam</span><span class="params">(<span class="string">"value"</span>)</span> String value,HttpServletRequest request,HttpServletResponse response) </span>&#123;</span><br><span class="line">        <span class="comment">//String name = json.get("name");</span></span><br><span class="line">        <span class="comment">//String value = json.get("value");</span></span><br><span class="line">        System.out.println(name+<span class="string">" "</span>+value);</span><br><span class="line">        Cookie cookie = <span class="keyword">new</span> Cookie(name,value);</span><br><span class="line">        <span class="comment">//这里设置domain注意了，getServerName得到的是ip地址</span></span><br><span class="line">        <span class="comment">//当然也可以写字符串,比如"aaa.com",注意这两个是不一样的</span></span><br><span class="line">        <span class="comment">//这在后面前端ajax代码中说明</span></span><br><span class="line">        cookie.setDomain(request.getServerName());</span><br><span class="line">        cookie.setHttpOnly(<span class="keyword">false</span>);</span><br><span class="line">        cookie.setPath(request.getContextPath());</span><br><span class="line">        System.out.println(request.getServerName()+<span class="string">" "</span>+request.getContextPath());</span><br><span class="line">        cookie.setMaxAge(<span class="number">60</span>*<span class="number">60</span>*<span class="number">24</span>);</span><br><span class="line">        response.addCookie(cookie);</span><br><span class="line">        <span class="comment">//response.setHeader("Set_Cookie","");</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"success"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"getCookie"</span>)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getCookie</span><span class="params">(@RequestParam(<span class="string">"name"</span>)</span> String name,HttpServletRequest request) </span>&#123;</span><br><span class="line">        Cookie[] cookies = request.getCookies();</span><br><span class="line">        <span class="keyword">if</span> (cookies == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"no cookies"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (Cookie cookie : cookies) &#123;</span><br><span class="line">            <span class="keyword">if</span> (cookie.getName().equals(name)) &#123;</span><br><span class="line">                <span class="keyword">return</span> cookie.getValue();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"no such cookie"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-前端测试代码"><a href="#3-前端测试代码" class="headerlink" title="3.前端测试代码"></a>3.前端测试代码</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=<span class="string">"en"</span>&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=<span class="string">"UTF-8"</span>&gt;</span><br><span class="line">    &lt;title&gt;Title&lt;<span class="regexp">/title&gt;</span></span><br><span class="line"><span class="regexp">    &lt;script src="https:/</span><span class="regexp">/cdn.bootcdn.net/</span>ajax/libs/axios/<span class="number">0.20</span><span class="number">.0</span><span class="number">-0</span>/axios.js<span class="string">"&gt;&lt;/script&gt;</span></span><br><span class="line"><span class="string">    &lt;script src="</span>https:<span class="comment">//cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"&gt;&lt;/script&gt;</span></span><br><span class="line">&lt;<span class="regexp">/head&gt;</span></span><br><span class="line"><span class="regexp">&lt;body&gt;</span></span><br><span class="line"><span class="regexp">&lt;button id="btn1"&gt;按钮1&lt;/</span>button&gt;</span><br><span class="line">&lt;button id=<span class="string">"btn2"</span>&gt;按钮<span class="number">2</span>&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">    let config = &#123;headers: &#123;'Content-Type': 'application/</span>x-www-form-urlencoded<span class="string">'&#125;&#125;;</span></span><br><span class="line"><span class="string">    $(function () &#123;</span></span><br><span class="line"><span class="string">        axios.defaults.withCredentials = true;</span></span><br><span class="line"><span class="string">        $("#btn1").click(function () &#123;</span></span><br><span class="line"><span class="string">        //这里url注意，如果上面domain写的是ip，这里也得写ip，写的是aa.com,这里就是aaa.com</span></span><br><span class="line"><span class="string">            axios.get('</span>http:<span class="comment">//aaa.com/test/addCookie?name=demoData&amp;value=demoData').then(res =&gt; &#123;</span></span><br><span class="line">                <span class="built_in">console</span>.log(res.data);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;);</span><br><span class="line">        $(<span class="string">"#btn2"</span>).click(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            axios.get(<span class="string">'http://aaa.com/test/getCookie?name=demoData'</span>).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="built_in">console</span>.log(res.data);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>body&gt;</span><br><span class="line">&lt;<span class="regexp">/html&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-测试"><a href="#4-测试" class="headerlink" title="4.测试"></a>4.测试</h3><p>测试时候建议用idea打开网页的方式打开，这样就是跨域请求了。<br><img src="https://img-blog.csdnimg.cn/20200820155321931.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>最后测试时候，谷歌永远不好使，其他浏览器都好使。<br><img src="https://img-blog.csdnimg.cn/2020082015534274.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>把这段错误信息查找一下，发现是谷歌浏览器新加的特性，80版本以上才有。可以这么处理：</p>
+<ul>
+<li>地址栏输入：chrome://flags/</li>
+<li>找到SameSite by default cookies和Cookies without SameSite must be secure</li>
+<li>将上面两项设置为 Disable<br>或者可以设置response的header，不过我没成功。<h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3>除了更改chrome设置，还可以直接写代码里面。<a href="https://blog.csdn.net/qq_15764477/article/details/108361573" target="_blank" rel="noopener">springboot解决谷歌80及以上版本的SameSite设置cookie失效</a></li>
+</ul>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

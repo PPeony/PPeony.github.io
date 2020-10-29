@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>springboot解决谷歌80及以上版本的SameSite设置cookie失效 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="前言谷歌80新加了一个SameSite属性，防止跨域。但是就是由于这个新加的属性，我无法把cookie传到前端，搜罗了全网找到了两种解决方法，在此记录一下。如果console出现下面这个，那cook,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">springboot解决谷歌80及以上版本的SameSite设置cookie失效</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">springboot解决谷歌80及以上版本的SameSite设置cookie失效</h1>
+        <div class="stuff">
+            <span>十月 29, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>谷歌80新加了一个SameSite属性，防止跨域。但是就是由于这个新加的属性，我无法把cookie传到前端，搜罗了全网找到了两种解决方法，在此记录一下。<br>如果console出现下面这个，那cookie估计就没设置上：<br><img src="https://img-blog.csdnimg.cn/20200902150618729.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>A cookie associated with a cross-site resource at <a href="http://stu.hrbkyd.com/" target="_blank" rel="noopener">http://stu.hrbkyd.com/</a> was set without the <code>SameSite</code> attribute. It has been blocked, as Chrome now only delivers cookies with cross-site requests if they are set with <code>SameSite=None</code> and <code>Secure</code>. You can review cookies in developer tools under Application&gt;Storage&gt;Cookies and see more details at <a href="https://www.chromestatus.com/feature/5088147346030592" target="_blank" rel="noopener">https://www.chromestatus.com/feature/5088147346030592</a> and <a href="https://www.chromestatus.com/feature/5633521622188032" target="_blank" rel="noopener">https://www.chromestatus.com/feature/5633521622188032</a>.</p>
+</blockquote>
+<h3 id="先看一下能正常设置cookie的request和response"><a href="#先看一下能正常设置cookie的request和response" class="headerlink" title="先看一下能正常设置cookie的request和response"></a>先看一下能正常设置cookie的request和response</h3><p>addCookie的response：<br><img src="https://img-blog.csdnimg.cn/20200902142856843.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>getCookie的request：<br><img src="https://img-blog.csdnimg.cn/20200902142925158.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>可以看出添加cookie的response会有 <strong>Set-Cookie</strong> 字段，getCookie的request会有 <strong>Cookie</strong> 字段，有这两个字段才能添加成功。<br>下面来看springboot下的操作。</p>
+<h3 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/addCookie3"</span>)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">addCookie3</span><span class="params">(@RequestParam(<span class="string">"name"</span>)</span> String name,@<span class="title">RequestParam</span><span class="params">(<span class="string">"value"</span>)</span> String value,HttpServletRequest request,HttpServletResponse response) </span>&#123;</span><br><span class="line">        System.out.println(name+<span class="string">" "</span>+value);</span><br><span class="line">        Cookie cookie = <span class="keyword">new</span> Cookie(name,value);</span><br><span class="line">        cookie.setDomain(domain);<span class="comment">//域名，xxx.com</span></span><br><span class="line">        cookie.setHttpOnly(<span class="keyword">false</span>);</span><br><span class="line">        cookie.setPath(request.getContextPath());</span><br><span class="line">        cookie.setMaxAge(<span class="number">60</span>*<span class="number">60</span>*<span class="number">24</span>);</span><br><span class="line">        response.addCookie(cookie);</span><br><span class="line">        String s = name+<span class="string">"="</span>+value+<span class="string">";"</span>;</span><br><span class="line">        response.setHeader(<span class="string">"Set-Cookie"</span>,s + <span class="string">"Path=*; SameSite=None; Secure"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"success"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/getCookie"</span>)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getCookie</span><span class="params">(@RequestParam(<span class="string">"name"</span>)</span> String name,HttpServletRequest request) </span>&#123;</span><br><span class="line">        Cookie[] cookies = request.getCookies();</span><br><span class="line">        <span class="keyword">if</span> (cookies == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"no cookies"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (Cookie cookie : cookies) &#123;</span><br><span class="line">            System.out.println(cookie.getName()+<span class="string">" "</span>+cookie.getValue());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (Cookie cookie : cookies) &#123;</span><br><span class="line">            <span class="keyword">if</span> (cookie.getName().equals(name)) &#123;</span><br><span class="line">                <span class="keyword">return</span> cookie.getValue();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"no such cookie"</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="效果图："><a href="#效果图：" class="headerlink" title="效果图："></a>效果图：</h4><blockquote>
+<p>说明：测试用页面的两个set按钮分别是添加cookie，一个为添加demoData=demoData,另一个为demoData2=damoData2,两个get是没别获取demoData和demoData2.</p>
+</blockquote>
+<h4 id="添加demoData："><a href="#添加demoData：" class="headerlink" title="添加demoData："></a>添加demoData：</h4><p><img src="https://img-blog.csdnimg.cn/20200902144237887.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>可以看出response的Set-Cookie字段存在值。这里我的SameSite设置为了None,这样就必须再设置一个属性Secure，并且用https连接，这里是迫不得已，还可以设置为SameSite=Lax，这样就不用设置Secure，但是这样我无法get到值，所以采用None搭配Secure。</p>
+<h4 id="得到demoData："><a href="#得到demoData：" class="headerlink" title="得到demoData："></a>得到demoData：</h4><p><img src="https://img-blog.csdnimg.cn/20200902144637832.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>本次我们发送的request也存在之前设置的cookie，并且也取到了值。<br>如下：<br><img src="https://img-blog.csdnimg.cn/20200902144824228.PNG#pic_center" alt="在这里插入图片描述"><br>现在我们添加了一个cookie是成功了，这时我就在想，上面的代码是拼接的Set-Cookie字段，那么设置下一个cookie时要不要把之前的cookie也获取到，然后再拼接上新cookie呢？<br>比如说在设置一个demoData2=demoData2，那么这次用不用写成</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">其实是不用的。这里在测试一下就可以，我们点击第二个set按钮，看看发生什么。</span><br><span class="line">#### 添加demoData2</span><br><span class="line">![在这里插入图片描述](https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20200902145320718.PNG?x-oss-process&#x3D;image&#x2F;watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center)</span><br><span class="line">可以看出，request发送时候带有demoData&#x3D;demoData，response我们并没有像上面那么拼接，只拼接了demoData2，但是response自动带上了demoData。</span><br><span class="line">#### 得到demoData2</span><br><span class="line">![在这里插入图片描述](https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20200902145515862.PNG?x-oss-process&#x3D;image&#x2F;watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center)</span><br><span class="line">全部结果如下</span><br><span class="line">![在这里插入图片描述](https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20200902145601864.PNG#pic_center)</span><br><span class="line">成功的取到了demoData2.</span><br><span class="line">下面来看方法二</span><br><span class="line">### 方法二</span><br><span class="line">get方法是一样的，这里只贴出来addCookie</span><br><span class="line">&#96;&#96;&#96;java</span><br><span class="line">@GetMapping(&quot;&#x2F;addCookie2&quot;)</span><br><span class="line">    @ResponseBody</span><br><span class="line">    public String addCookie2(@RequestParam(&quot;name&quot;) String name,@RequestParam(&quot;value&quot;) String value,HttpServletRequest request,HttpServletResponse response) &#123;</span><br><span class="line">        System.out.println(name+&quot; &quot;+value);</span><br><span class="line">        &#x2F;&#x2F;new</span><br><span class="line">        HttpCookie cookie &#x3D; CookieUtils.generateSetCookie(request, name, value,Duration.ofHours(24 * 7));&#x2F;&#x2F;七天过期</span><br><span class="line">        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());</span><br><span class="line">        return &quot;success&quot;;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>下面是CookieUtils</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CookieUtils</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> String domain = <span class="string">"xxx.com"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> HttpCookie <span class="title">generateSetCookie</span><span class="params">(HttpServletRequest request, String name, String value,Duration duration)</span></span>&#123;</span><br><span class="line">        ResponseCookie cookie = ResponseCookie.from(name, value) <span class="comment">// key &amp; value</span></span><br><span class="line">                .secure(<span class="keyword">true</span>)		<span class="comment">// 在https下传输,配合none使用</span></span><br><span class="line">                .domain(domain)<span class="comment">// 域名</span></span><br><span class="line">                .path(<span class="string">"*"</span>)			<span class="comment">// path</span></span><br><span class="line">                .maxAge(duration)	<span class="comment">// 过期时间</span></span><br><span class="line">                .sameSite(<span class="string">"None"</span>)	</span><br><span class="line">                .build()</span><br><span class="line">                ;</span><br><span class="line">        <span class="keyword">return</span> cookie;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>具体情况和细节与方法一是一样的。</p>
+<h3 id="deleteCookie"><a href="#deleteCookie" class="headerlink" title="deleteCookie"></a>deleteCookie</h3><p>有了添加的方法，删除就不难了，只需要把有效时间变为0就行。下面采用方法2来删除cookie。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/deleteCookie"</span>)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">deleteCookie</span><span class="params">(String names, HttpServletRequest request,HttpServletResponse response)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"names:"</span>+names);</span><br><span class="line">        Cookie[] cookies = request.getCookies();</span><br><span class="line">        <span class="keyword">if</span> (cookies == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"no cookies"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; cookies.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (names.equals(cookies[i].getValue())) &#123;</span><br><span class="line">                ResponseCookie cookie = (ResponseCookie)CookieUtils.generateSetCookie(request,names,<span class="keyword">null</span>,Duration.ZERO);<span class="comment">//有效时间为0</span></span><br><span class="line">                response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"success"</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="设置session"><a href="#设置session" class="headerlink" title="设置session"></a>设置session</h3><p>cookie整明白了，session就好设置了，因为session是通过Set-Cookie的JSESSIONID设置的，只需要获取到JSESSIONID就行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/setSession"</span>)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result <span class="title">setSession</span><span class="params">(String str,HttpSession session,HttpServletRequest request,HttpServletResponse response)</span> </span>&#123;</span><br><span class="line">        System.out.println(str);</span><br><span class="line">        session.setAttribute(<span class="string">"str"</span>,str);</span><br><span class="line">        String id = session.getId();</span><br><span class="line">        HttpCookie cookie = CookieUtils.generateSetCookie(request, <span class="string">"JSESSIONID"</span>, id, Duration.ofHours(<span class="number">3</span>));</span><br><span class="line">        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());</span><br><span class="line">        Result result = <span class="keyword">new</span> Result();</span><br><span class="line">        result.setCode(HttpStatus.OK.value());</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="最后附上测试用前端代码"><a href="#最后附上测试用前端代码" class="headerlink" title="最后附上测试用前端代码"></a>最后附上测试用前端代码</h3><p><strong>注意如果设置SameSite=None，必须设置Secure，并且用https传输。如果是SameSite=Lax，则没有前面要求。</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=<span class="string">"en"</span>&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=<span class="string">"UTF-8"</span>&gt;</span><br><span class="line">    &lt;title&gt;Title&lt;<span class="regexp">/title&gt;</span></span><br><span class="line"><span class="regexp">    &lt;script src="https:/</span><span class="regexp">/cdn.bootcdn.net/</span>ajax/libs/axios/<span class="number">0.20</span><span class="number">.0</span><span class="number">-0</span>/axios.js<span class="string">"&gt;&lt;/script&gt;</span></span><br><span class="line"><span class="string">    &lt;script src="</span>https:<span class="comment">//cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"&gt;&lt;/script&gt;</span></span><br><span class="line">&lt;<span class="regexp">/head&gt;</span></span><br><span class="line"><span class="regexp">&lt;body&gt;</span></span><br><span class="line"><span class="regexp">&lt;button id="btn1"&gt;按钮1(set)&lt;/</span>button&gt;</span><br><span class="line">&lt;button id=<span class="string">"btn2"</span>&gt;按钮<span class="number">2</span>(<span class="keyword">get</span>)&lt;/button&gt;</span><br><span class="line">&lt;button id="btn3"&gt;按钮3(<span class="keyword">set</span>)&lt;/button&gt;</span><br><span class="line">&lt;button id="btn6"&gt;按钮6(<span class="keyword">get</span>)&lt;/button&gt;</span><br><span class="line">&lt;button id="btn4"&gt;按钮4(delete1)&lt;/button&gt;</span><br><span class="line">&lt;button id="btn5"&gt;按钮4(delete2)&lt;/button&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    let config = &#123;headers: &#123;<span class="string">'Content-Type'</span>: <span class="string">'application/x-www-form-urlencoded'</span>&#125;&#125;;</span><br><span class="line">    <span class="keyword">let</span> domain = <span class="string">"localhost"</span></span><br><span class="line">    $(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        axios.defaults.withCredentials = <span class="literal">true</span>;</span><br><span class="line">        $(<span class="string">"#btn1"</span>).click(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            axios.get(<span class="string">'https://xxx.com/test/addCookie?name=demoData&amp;value=demoData'</span>).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="built_in">console</span>.log(res.data);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        $(<span class="string">"#btn2"</span>).click(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            axios.get(<span class="string">'https://xxx.com/test/getCookie?name=demoData'</span>).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="built_in">console</span>.log(res.data);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;)</span><br><span class="line"></span><br><span class="line">        $(<span class="string">"#btn3"</span>).click(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            axios.get(<span class="string">'https://xxx.com/test/addCookie?name=demoData2&amp;value=demoData2'</span>).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="built_in">console</span>.log(res.data);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        $(<span class="string">"#btn4"</span>).click(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            axios.get(<span class="string">'https://xxx.com/test/deleteCookie?names=demoData'</span>).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="built_in">console</span>.log(res.data);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        $(<span class="string">"#btn5"</span>).click(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            axios.get(<span class="string">'https://xxx.com/test/deleteCookie?names=demoData2'</span>).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="built_in">console</span>.log(res.data);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        $(<span class="string">"#btn6"</span>).click(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            axios.get(<span class="string">'https://xxx.com/test/getCookie?name=demoData2'</span>).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="built_in">console</span>.log(res.data);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>body&gt;</span><br><span class="line">&lt;<span class="regexp">/html&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3><p>测试时候发现，/user下面的session会保存成功，但是到了/orderForm时，不会自动加上session，会在生成一个session,查看cookie就能发现有两个JSESSION，但是路径不一样。我的处理方式是在cookieUtil里面设置路径的path设置为”/“。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> HttpCookie <span class="title">generateSetCookie</span><span class="params">(HttpServletRequest request, String name, String value,Duration duration)</span> </span>&#123;</span><br><span class="line">        ResponseCookie cookie = ResponseCookie.from(name, value) <span class="comment">// key &amp; value</span></span><br><span class="line">                .secure(<span class="keyword">true</span>)		<span class="comment">// 在https下传输,配合none使用</span></span><br><span class="line">                .domain(domain)<span class="comment">// 域名</span></span><br><span class="line">                .path(<span class="string">"/"</span>)			<span class="comment">// path</span></span><br><span class="line">                .maxAge(duration)	<span class="comment">// 过期时间</span></span><br><span class="line">                .sameSite(<span class="string">"None"</span>)	<span class="comment">// 大多数情况也是不发送第三方 Cookie，但是导航到目标网址的 Get 请求除外Lax或者none</span></span><br><span class="line">                .build()</span><br><span class="line">                ;</span><br><span class="line">        <span class="keyword">return</span> cookie;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
