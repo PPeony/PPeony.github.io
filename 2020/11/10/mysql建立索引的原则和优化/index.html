@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>mysql建立索引的原则和优化 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="mysql建立索引的原则和优化单表的索引以下面的表为例，表叫article。
+创建索引语句：create index idx_ccv on article(category_id,comments,,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">mysql建立索引的原则和优化</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">mysql建立索引的原则和优化</h1>
+        <div class="stuff">
+            <span>十一月 10, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="mysql建立索引的原则和优化"><a href="#mysql建立索引的原则和优化" class="headerlink" title="mysql建立索引的原则和优化"></a>mysql建立索引的原则和优化</h1><h2 id="单表的索引"><a href="#单表的索引" class="headerlink" title="单表的索引"></a>单表的索引</h2><p>以下面的表为例，表叫article。<br><img src="https://img-blog.csdnimg.cn/20201110165416232.PNG#pic_center" alt="图片p31表结构"></p>
+<p>创建索引语句：<code>create index idx_ccv on article(category_id,comments,views);</code><br>查询语句：<code>explain select id,author_id from `article` where category_id=1 and comments&gt;1 order by views desc limit 1;</code><br>explain的结果如下：<br><img src="https://img-blog.csdnimg.cn/20201110165423929.PNG#pic_center" alt="图片p31未优化索引"></p>
+<p>extra列出现了using filesort，全表扫描，说明索引跟没有上一样，并没有加快速度。原因是这样的，根据索引的创建顺序，我们先建立的是category_id,索引先按照有序的category_id查找，之后遇到了comments&gt;1的range查询，在按照有序的comments查询的时候，无法再保证views是有序的，所以索引没发继续用，只能全表扫描。</p>
+<h2 id="两个表的索引"><a href="#两个表的索引" class="headerlink" title="两个表的索引"></a>两个表的索引</h2><p>两个表结构class和book。<br><img src="https://img-blog.csdnimg.cn/2020111016543658.PNG#pic_center" alt="图片p32class"><br><img src="https://img-blog.csdnimg.cn/20201110165442876.PNG#pic_center" alt="图片p32book"></p>
+<p>连接查询语句：<code>select * from book left join class on book.card=class.card;</code><br>首先一个问题就是，这个索引在calss表还是book表？</p>
+<p>直接给出结论： <strong>左连接索引建在left join右面的表，右连接索引在right join左面的表</strong><br>以左连接为例:<br>创建索引:<code>create index idx on class(card);</code><br>左连接查询：<code>explain select * from book left join class on book.card=class.card;</code><br>explain结果：<br><img src="https://img-blog.csdnimg.cn/2020111016545823.PNG#pic_center" alt="图片p32左连接explain"></p>
+<p>对于左连接，左表必须全部查询，所以做表建索引没有意义，给右表建就可以了，右连接同理。</p>
+<h2 id="两个以上表的索引"><a href="#两个以上表的索引" class="headerlink" title="两个以上表的索引"></a>两个以上表的索引</h2><p>在两个表的基础上又建立了一个phone表。<br><img src="https://img-blog.csdnimg.cn/2020111016550682.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="图片p33phone表"></p>
+<p>查询语句：<code>select * from class left join book on class.card=book.card left join phone on book.card=phone.card;</code></p>
+<p>根据两个表的经验，可以推出应在leftjoin右边建索引，也就是book和phone上面对card列建立索引。</p>
+<h2 id="join的优化"><a href="#join的优化" class="headerlink" title="join的优化"></a>join的优化</h2><ol>
+<li>用小的结果集驱动大的结果集。left join左边集合最好是小的。</li>
+<li>优先优化内层循环。</li>
+<li>join的被驱动表要加上索引。</li>
+</ol>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

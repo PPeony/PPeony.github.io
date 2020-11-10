@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>用explain查看一个sql底层的执行情况 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="用explain查看一个sql底层的执行情况explain + sql语句例如 explain select * from user显示出：|id|select_type|table|type|po,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">用explain查看一个sql底层的执行情况</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">用explain查看一个sql底层的执行情况</h1>
+        <div class="stuff">
+            <span>十一月 10, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="用explain查看一个sql底层的执行情况"><a href="#用explain查看一个sql底层的执行情况" class="headerlink" title="用explain查看一个sql底层的执行情况"></a>用explain查看一个sql底层的执行情况</h1><p>explain + sql语句<br>例如 <code>explain select * from user</code><br>显示出：<br>|id|select_type|table|type|possible_keys|key|key_len|ref|rows|extra|<br>|—|—|—|—|—|—|—|—|—|—|</p>
+<hr>
+<blockquote>
+<p>mysql的索引，除了聚簇索引(一般都是主键)之外的索引(非聚簇索引)，存储的都是索引列上+主键列的数值，不存储其他列。所以查完索引如果要获取其他列的属性，还需要通过得到的主键去查一遍主键，主键索引会含有其他字段的信息。详细文章点这里：<a href="https://blog.csdn.net/feichitianxia/article/details/107997795" target="_blank" rel="noopener">联合索引的底层结构</a></p>
+</blockquote>
+<p>下面分别解释各列</p>
+<h2 id="1-id和table"><a href="#1-id和table" class="headerlink" title="1.id和table"></a>1.id和table</h2><p>id不代表主键，代表的一种状态，用来表示表的读取顺序。table是表名字。</p>
+<h3 id="1-1-id的第一种情况"><a href="#1-1-id的第一种情况" class="headerlink" title="1.1 id的第一种情况"></a>1.1 id的第一种情况</h3><p><img src="https://img-blog.csdnimg.cn/20201110164607530.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>如果id相同，则表的读取顺序是由上到下。</p>
+<h3 id="1-2-id的第二种情况"><a href="#1-2-id的第二种情况" class="headerlink" title="1.2 id的第二种情况"></a>1.2 id的第二种情况</h3><p><img src="https://img-blog.csdnimg.cn/2020111016462477.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>如果id不同，若是子查询，id序号递增，先执行id最大的。</p>
+<h3 id="1-3-id第三种情况"><a href="#1-3-id第三种情况" class="headerlink" title="1.3 id第三种情况"></a>1.3 id第三种情况</h3><p><img src="https://img-blog.csdnimg.cn/2020111016463215.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>若相同的和不同的同时存在，先执行id最大的。对于一样的id，从上到下执行。上图执行顺序为：t3-&gt;derived-&gt;t2.</p>
+<h2 id="2-select-type"><a href="#2-select-type" class="headerlink" title="2. select_type"></a>2. select_type</h2><p>select_type表示的是数据库理解的查询类型，共六种。</p>
+<ol>
+<li>simple：简单的select查询，查询中不包含子查询或者union</li>
+<li>primary：查询中如果有任何复杂的子部分，最外层查询就是primary</li>
+<li>subquery：select中的子查询</li>
+<li>derived：from中的子查询就是derived，会把查询结果放在临时表里面</li>
+<li>union：第二个查询在union之后，就会标记为union；若union包含在from的子查询中，外层的select会标记为derived</li>
+<li>union result：从union表获取结果的select</li>
+</ol>
+<h2 id="3-type"><a href="#3-type" class="headerlink" title="3. type"></a>3. type</h2><p>type表示查询用的是哪种类型，常见的7种，由好到坏排序如下：<br><code>system&gt;const&gt;eq_ref&gt;ref&gt;range&gt;index&gt;all</code></p>
+<ol>
+<li><p>system：只有一行记录，等于系统表，const类型的特例</p>
+</li>
+<li><p>表示通过索引一次就找到了。const用于比较primary key或者unique索引。因为只匹配一行数据，所以很快。比如 where id=5,mysql就会把这个查询转换为常量。</p>
+</li>
+<li><p>eq_ref：唯一性索引扫描，对于每个索引键，表中只有一条记录与之匹配。示例如下，因为t2中只有一个id和t1的id重合，所以t2是eq_ref。<br><img src="https://img-blog.csdnimg.cn/20201110164656375.PNG#pic_center" alt="在这里插入图片描述"></p>
+</li>
+<li><p>ref：非唯一性索引扫描，返回所有匹配某个单独值的行。但也可能找到多个符合条件的行。示例如下，建了两个索引，应用其中一个，并且符合条件的不止有一行，下面只有一行是因为只插了一行数据。正常的索引都是这个type。<br><img src="https://img-blog.csdnimg.cn/20201110164721513.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+</li>
+<li><p>range：只检索给定范围的行，使用一个索引来选择行。key列会显示用了哪个索引。语句中含有between，&gt;，&lt;等字段。</p>
+</li>
+<li><p>index：只遍历索引树，而all是遍历整个表。索引在内存中，比硬盘中的数据读取快。</p>
+</li>
+<li><p>all：扫描整个表。</p>
+</li>
+</ol>
+<h2 id="4-possible-keys，key和key-len"><a href="#4-possible-keys，key和key-len" class="headerlink" title="4. possible keys，key和key_len"></a>4. possible keys，key和key_len</h2><p>possible keys显示查询字段上面的索引，若是有多个，都会列出。<br>key是实际用到的索引，如果是null，则没有使用索引，若用到了覆盖索引，则该索引只出现在key列表当中。</p>
+<blockquote>
+<p>覆盖索引：就是select的数据列只用从索引中就能够取得，不必从数据表中读取，换句话说查询列要被所使用的索引覆盖。如下图，col1和col2都有索引。<br><img src="https://img-blog.csdnimg.cn/20201110165035925.PNG#pic_center" alt="在这里插入图片描述"></p>
+</blockquote>
+<p>key_len表示索引字段的最大可能长度（单位：字节），并非实际使用长度，是根据表定义计算出来的，长度越短越好。</p>
+<h2 id="5-ref"><a href="#5-ref" class="headerlink" title="5. ref"></a>5. ref</h2><p>哪些列或常量被用于查找索引列上的值。<br><img src="https://img-blog.csdnimg.cn/20201110164811882.PNG#pic_center" alt="图片mysql-ref2"></p>
+<p>t1用到了两个索引，一个是shared库的t2表的col1，还有一个是常数const(‘ac’)。</p>
+<h2 id="6-rows"><a href="#6-rows" class="headerlink" title="6. rows"></a>6. rows</h2><p>根据表的信息，估算出需要遍历多少行才能找到符合条件的记录。<br>下图是建索引和没建索引的区别，建索引之后行数减少了一半多。<br><img src="https://img-blog.csdnimg.cn/2020111016482585.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="图片mysql-row"></p>
+<h2 id="7-extra"><a href="#7-extra" class="headerlink" title="7. extra"></a>7. extra</h2><p>不适合在其他列里面写，但又十分重要的消息。</p>
+<h3 id="7-1-using-filesort"><a href="#7-1-using-filesort" class="headerlink" title="7.1 using filesort"></a>7.1 using filesort</h3><p>mysql无法按照原本的索引进行排序，只能按照默认排序的方法排序。<br>出现这个肯定是不好的，需要优化。<br><img src="https://img-blog.csdnimg.cn/2020111016484756.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="图片mysql-extra-usingfilesort"></p>
+<p>第一次order by没有用到col2索引，而第二次用到了，所以第二次没有usingfilesort。</p>
+<h3 id="7-2-using-temporary"><a href="#7-2-using-temporary" class="headerlink" title="7.2 using temporary"></a>7.2 using temporary</h3><p>表示用了临时表存储中间结果，常见于order by和group by。<br>创建临时表，还要消除，所以出现这个字段也不好。<br><img src="https://img-blog.csdnimg.cn/20201110164924231.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE1NzY0NDc3,size_16,color_FFFFFF,t_70#pic_center" alt="图片mysql-extra-usingtemporary"></p>
+<p>因为group by用到的索引并不是col1和col2的联合索引，导致索引失效。对于col1，col2，col3组成的联合索引，他们就像是楼梯一二三层，必须从左到右按顺序来，只用col2，col3或者只用col3，又或者col1加上col3，这都是不行的。</p>
+<h3 id="7-3-using-index-和-using-where"><a href="#7-3-using-index-和-using-where" class="headerlink" title="7.3 using index 和 using where"></a>7.3 using index 和 using where</h3><p>表示用到了覆盖索引，效率不错。如果同时出现了 using where ，表明索引被用来执行索引键值的查找。没有 using where ，表明索引用来读取数据而非查找。<br>用到了using where：<br><img src="https://img-blog.csdnimg.cn/20201110164939159.PNG#pic_center" alt="图片mysql-extra-usingindex1"></p>
+<p>没用到using where：<br><img src="https://img-blog.csdnimg.cn/20201110164947748.PNG#pic_center" alt="图片mysql-extra-usingindex2"></p>
+<h3 id="7-4-using-join-buffer"><a href="#7-4-using-join-buffer" class="headerlink" title="7.4 using join buffer"></a>7.4 using join buffer</h3><p>用到了join缓存。</p>
+<h3 id="7-5-impossible-where"><a href="#7-5-impossible-where" class="headerlink" title="7.5 impossible where"></a>7.5 impossible where</h3><p>where的值总是false，不能用来获取任何元素。</p>
+<h3 id="7-6-select-tables-optimized-away和distinct"><a href="#7-6-select-tables-optimized-away和distinct" class="headerlink" title="7.6 select tables optimized away和distinct"></a>7.6 select tables optimized away和distinct</h3><p>前者是数据库执行的优化操作，优化min，max，count等。后者在找到第一个匹配的元素之后就停止找同样值的操作。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
