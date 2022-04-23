@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>云主机安装kubernetes遇到的节点之间不互通问题 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="云主机安装kubernetes遇到的节点之间不互通问题
+参考：https://www.cnblogs.com/xuweiweiwoaini/p/13884112.htmlhttps://cloud.,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">云主机安装kubernetes遇到的节点之间不互通问题</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">云主机安装kubernetes遇到的节点之间不互通问题</h1>
+        <div class="stuff">
+            <span>四月 23, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="云主机安装kubernetes遇到的节点之间不互通问题"><a href="#云主机安装kubernetes遇到的节点之间不互通问题" class="headerlink" title="云主机安装kubernetes遇到的节点之间不互通问题"></a>云主机安装kubernetes遇到的节点之间不互通问题</h1><blockquote>
+<p>参考：<br><a href="https://www.cnblogs.com/xuweiweiwoaini/p/13884112.html" target="_blank" rel="noopener">https://www.cnblogs.com/xuweiweiwoaini/p/13884112.html</a><br><a href="https://cloud.tencent.com/developer/article/1591506" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1591506</a><br><a href="https://cloud.tencent.com/developer/article/1819134" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1819134</a></p>
+</blockquote>
+<p>前期工作都类似，但是在处理各个主机之间联通的时候，没有查到相同的文章，写一篇记录。</p>
+<h1 id="材料"><a href="#材料" class="headerlink" title="材料"></a>材料</h1><p>一个腾讯云centos7，一个阿里云centos7，一个腾讯云ubuntu<br>三台主机内网不互通，外网有ip可直接访问</p>
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>创建service开放了30288端口，在开放了安全组30288之后，master仍无法通过30288访问到node节点。</p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>在参考2中，里面提出了解决方案。在初始化时应该正确配置公网ip。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: kubeadm.k8s.io&#x2F;v1beta2</span><br><span class="line">kind: ClusterConfiguration</span><br><span class="line">imageRepository: registry.cn-hangzhou.aliyuncs.com&#x2F;google_containers</span><br><span class="line">controlPlaneEndpoint: 82.157.190.81:6443</span><br><span class="line">clusterName: kubernetes</span><br><span class="line">apiServer:</span><br><span class="line">  certSANs:</span><br><span class="line">    - 82.157.190.81</span><br><span class="line">  extraArgs:</span><br><span class="line">    authorization-mode: Node,RBAC</span><br><span class="line">    advertise-address: 82.157.190.81</span><br><span class="line">networking:</span><br><span class="line">  dnsDomain: cluster.local</span><br><span class="line">  podSubnet: 10.244.0.0&#x2F;16</span><br><span class="line">  serviceSubnet: 10.96.0.0&#x2F;12</span><br></pre></td></tr></table></figure>
+<p>注意apiServer下面的controlPlaneEndpoint，certSANs写公网ip，extraArgs的advertise-address同公网ip。</p>
+<p>然后通过下面命令初始化<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm init --config&#x3D;kubeinit.yaml | tee kubeadm-init.log</span><br></pre></td></tr></table></figure><br>  正常你能看到的图片应该这样</p>
+<p><img src="https://img2020.cnblogs.com/blog/1128804/202010/1128804-20201027121241851-153602148.png" alt="pic"><br>  然后执行cp和chown，cp配置文件。</p>
+<p><strong>如果到这你可以成功访问其他节点了，那祝贺你，后面和你没关系了</strong></p>
+<p>接下来需要在安全组中开放端口，这里参考<a href="https://blog.csdn.net/yucaifu1989/article/details/104683659" target="_blank" rel="noopener">Kubernetes集群开启Firewall</a></p>
+<p>master开放对应的协议端口，注意不全是tcp</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --permanent --add-port&#x3D;6443&#x2F;tcp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;2379-2380&#x2F;tcp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;10250&#x2F;tcp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;10251&#x2F;tcp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;10252&#x2F;tcp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;10255&#x2F;tcp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;8472&#x2F;udp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;443&#x2F;udp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;53&#x2F;udp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;53&#x2F;tcp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;9153&#x2F;tcp</span><br></pre></td></tr></table></figure>
+<p>node开放端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --permanent --add-port&#x3D;10250&#x2F;tcp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;10255&#x2F;tcp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;8472&#x2F;udp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;443&#x2F;udp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;30000-32767&#x2F;tcp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;53&#x2F;udp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;53&#x2F;tcp</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port&#x3D;9153&#x2F;tcp</span><br></pre></td></tr></table></figure>
+<p>然后本机开启nat转发</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --add-masquerade --permanent</span><br><span class="line"></span><br><span class="line"># 检查是否允许NAT转发</span><br><span class="line"></span><br><span class="line">firewall-cmd --query-masquerade</span><br></pre></td></tr></table></figure>
+
+<p>此时还是不通。<br>然后我在参考3中发现了结果，可以通过tcpdump抓包，查看包的源地址和目的地址，判断包是否发出。</p>
+<p>在tcpdump监控eth0网卡之后，发现目的地址是另一台主机的内网ip。</p>
+<p>通过<code>kubectl describe nodes k8s-node-2</code>得到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Name:               k8s-node-2</span><br><span class="line">Roles:              &lt;none&gt;</span><br><span class="line">Labels:             beta.kubernetes.io&#x2F;arch&#x3D;amd64</span><br><span class="line">                    beta.kubernetes.io&#x2F;os&#x3D;linux</span><br><span class="line">                    kubernetes.io&#x2F;arch&#x3D;amd64</span><br><span class="line">                    kubernetes.io&#x2F;hostname&#x3D;k8s-node-2</span><br><span class="line">                    kubernetes.io&#x2F;os&#x3D;linux</span><br><span class="line">Annotations:        flannel.alpha.coreos.com&#x2F;backend-data: &#123;&quot;VNI&quot;:1,&quot;VtepMAC&quot;:&quot;7e:a5:78:f3:de:1c&quot;&#125;</span><br><span class="line">                    flannel.alpha.coreos.com&#x2F;backend-type: vxlan</span><br><span class="line">                    flannel.alpha.coreos.com&#x2F;kube-subnet-manager: true</span><br><span class="line">                    flannel.alpha.coreos.com&#x2F;public-ip: 10.0.16.5</span><br><span class="line">                    kubeadm.alpha.kubernetes.io&#x2F;cri-socket: &#x2F;var&#x2F;run&#x2F;dockershim.sock</span><br><span class="line">                    node.alpha.kubernetes.io&#x2F;ttl: 0</span><br><span class="line">                    volumes.kubernetes.io&#x2F;controller-managed-attach-detach: true</span><br></pre></td></tr></table></figure>
+<p>在public-ip部分，显示的是内网ip，把他改成外网ip。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]# kubectl annotate node k8s-node-2 flannel.alpha.coreos.com&#x2F;public-ip-overwrite&#x3D;43.138.19.214 --overwrite</span><br><span class="line">node&#x2F;k8s-node-2 annotated</span><br><span class="line">[root@k8s-master ~]# kubectl -n kube-system get pods --field-selector spec.nodeName&#x3D;k8s-node-2 | grep flannel</span><br><span class="line">kube-flannel-ds-ddn72   1&#x2F;1     Running   0          56m</span><br><span class="line">[root@k8s-master ~]# kubectl -n kube-system get pod kube-flannel-ds-ddn72 -o yaml | kubectl replace --force -f -</span><br><span class="line">pod &quot;kube-flannel-ds-ddn72&quot; deleted</span><br><span class="line">pod&#x2F;kube-flannel-ds-ddn72 replaced</span><br></pre></td></tr></table></figure>
+<p>这个时候通过master公网ip:端口就能成功访问了。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
