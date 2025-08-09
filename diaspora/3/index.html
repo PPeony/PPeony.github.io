@@ -60,7 +60,7 @@
         
     </ul>
     <p id="copyright">
-        &copy; 2024 peony.
+        &copy; 2025 peony.
         Powered by <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a>
         Theme <a href="https://github.com/Fechin/hexo-theme-diaspora" title="Diaspora" target="_blank" rel="noopener">Diaspora</a>
         by Fechin
@@ -90,14 +90,45 @@
     
     <div id="post0">
         <p>十月 29, 2020</p>
-        <h2><a href="/2020/10/29/AQS%E4%BB%8B%E7%BB%8D/" title="AQS源码解析" class="posttitle">AQS源码解析</a></h2>
-        <p class="summary">AQS介绍AQS是同步锁内实现同步的共同父类，如下UML图能看出，ReentrantLock等锁都是基于AQS。（...</p>
+        <h2><a href="/2020/10/29/JUC%E5%8C%85%E4%B8%80%E4%BA%9B%E9%94%81%E7%9A%84%E4%BB%8B%E7%BB%8D%E5%92%8C%E4%BD%BF%E7%94%A8/" title="JUC包一些锁的介绍和使用" class="posttitle">JUC包一些锁的介绍和使用</a></h2>
+        <p class="summary">
+JUC包的这些锁都是基于AQS的实现，关于AQS还请看下一篇文章
+
+一、ReentrantLock可重入锁独占锁...</p>
     </div>
     
 </div>
 
     <div id="primary">
         
+<div class="post">
+    <a href="/2020/10/29/JUC%E5%8C%85%E4%B8%80%E4%BA%9B%E9%94%81%E7%9A%84%E4%BB%8B%E7%BB%8D%E5%92%8C%E4%BD%BF%E7%94%A8/" title="JUC包一些锁的介绍和使用">
+        <img src="/img/default.png" class="cover" width="680" height="440">
+    </a>
+    <div class="else">
+        <p>十月 29, 2020</p>
+        <h3><a href="/2020/10/29/JUC%E5%8C%85%E4%B8%80%E4%BA%9B%E9%94%81%E7%9A%84%E4%BB%8B%E7%BB%8D%E5%92%8C%E4%BD%BF%E7%94%A8/" title="JUC包一些锁的介绍和使用" class="posttitle">JUC包一些锁的介绍和使用</a></h3>
+        <p>
+JUC包的这些锁都是基于AQS的实现，关于AQS还请看下一篇文章
+
+一、ReentrantLock可重入锁独占锁，synchronized就属于可重入锁...</p>
+    </div>
+</div>
+
+
+<div class="post">
+    <a href="/2020/10/29/CAS%E3%80%81synchronized%E5%92%8Cvolatile/" title="CAS、synchronized和volatile">
+        <img src="/img/default.png" class="cover" width="680" height="440">
+    </a>
+    <div class="else">
+        <p>十月 29, 2020</p>
+        <h3><a href="/2020/10/29/CAS%E3%80%81synchronized%E5%92%8Cvolatile/" title="CAS、synchronized和volatile" class="posttitle">CAS、synchronized和volatile</a></h3>
+        <p>一.CASCASnative方法。修改一个值，当前为0，现在要加一，在写回的时候，判断该变量是否还是0,。
+ABA问题CAS会有一个问题，如果该变量还是0...</p>
+    </div>
+</div>
+
+
 <div class="post">
     <a href="/2020/10/29/AQS%E4%BB%8B%E7%BB%8D/" title="AQS源码解析">
         <img src="/img/default.png" class="cover" width="680" height="440">
@@ -202,37 +233,6 @@ wait：挂起当前线程，释放获取到的锁，直到别的线...</p>
         <p>面试题 17.13. 恢复空格
 
 哦，不！你不小心把一个长篇文章中的空格、标点都删掉了，并且大写也弄成了小写。像句子”I reset the comput...</p>
-    </div>
-</div>
-
-
-<div class="post">
-    <a href="/2020/08/13/RestController%E6%B3%A8%E8%A7%A3%E7%9A%84%E4%BD%9C%E7%94%A8/" title="RestController注解的作用">
-        <img src="/img/default.png" class="cover" width="680" height="440">
-    </a>
-    <div class="else">
-        <p>八月 13, 2020</p>
-        <h3><a href="/2020/08/13/RestController%E6%B3%A8%E8%A7%A3%E7%9A%84%E4%BD%9C%E7%94%A8/" title="RestController注解的作用" class="posttitle">RestController注解的作用</a></h3>
-        <p>RestController注解的作用源于spring实战第五版：
-
-@RestController注解有两个目的。首先他是一个类似于@controlle...</p>
-    </div>
-</div>
-
-
-<div class="post">
-    <a href="/2020/08/13/leetcode32-%E6%9C%80%E9%95%BF%E6%9C%89%E6%95%88%E6%8B%AC%E5%8F%B7-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" title="leetcode32. 最长有效括号-动态规划">
-        <img src="/img/default.png" class="cover" width="680" height="440">
-    </a>
-    <div class="else">
-        <p>八月 13, 2020</p>
-        <h3><a href="/2020/08/13/leetcode32-%E6%9C%80%E9%95%BF%E6%9C%89%E6%95%88%E6%8B%AC%E5%8F%B7-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" title="leetcode32. 最长有效括号-动态规划" class="posttitle">leetcode32. 最长有效括号-动态规划</a></h3>
-        <p>leetcode32. 最长有效括号
-
-给定一个只包含 ‘(‘ 和 ‘)’ 的字符串，找出最长的包含有效括号的子串的长度。
-
-
-示例 1:输入: “(()...</p>
     </div>
 </div>
 

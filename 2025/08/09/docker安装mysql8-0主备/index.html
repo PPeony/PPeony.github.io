@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>docker安装mysql8.0主备 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="
+mac环境，网上没有找到docker部署8.0的文章，踩了两个小时坑
+
+
+拉取master镜像：注意要先登录一下docker账户，不然不让拉取镜像，科学上网一下才能登录
+
+
+1docker run,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="https://ppeony.github.io"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">docker安装mysql8.0主备</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">docker安装mysql8.0主备</h1>
+        <div class="stuff">
+            <span>八月 09, 2025</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <blockquote>
+<p>mac环境，网上没有找到docker部署8.0的文章，踩了两个小时坑</p>
+</blockquote>
+<ol>
+<li>拉取master镜像：<br>注意要先登录一下docker账户，不然不让拉取镜像，科学上网一下才能登录</li>
+</ol>
+<p><img src="https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/a956afec56184bb6af42a79b2cb381da~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgd2F2ZTc3Nw==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiNzEyOTQ2NzE4NjE1NzQyIn0%3D&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1755332376&x-orig-sign=g14dPgI991XV4ORREHUc7rJd1uM%3D" alt="image.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 3307:3306 --name mysql-master -v ~/data/mysql-master/<span class="built_in">log</span>:/var/<span class="built_in">log</span>/mysql -v ~/data/mysql-master/data:/var/lib/mysql -v ~/data/mysql-master/conf/my.cnf:/etc/my.cnf -e MYSQL_ROOT_PASSWORD=root -d mysql:8.0</span><br></pre></td></tr></table></figure>
+
+<p>在~/data/mysql-master/conf/my.cnf下面要创建一个my.cnf文件，内容如下：</p>
+<pre><code>[mysqld]
+server_id=101
+binlog-ignore-db=mysql
+log-bin=mall-mysql-bin
+binlog_cache_size=1M
+binlog_format=mixed
+expire_logs_days=7
+slave_skip_errors=1062</code></pre><p>然后登入到容器里面创建用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it mysql-slave /bin/bash</span><br><span class="line">mysql -uroot -proot</span><br><span class="line"></span><br><span class="line">mysql&gt; create user <span class="string">'slave'</span>@<span class="string">'%'</span> identified with mysql_native_password by <span class="string">'123456'</span>;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; grant replication slave,replication client on *.* to <span class="string">'slave'</span>@<span class="string">'%'</span>;</span><br><span class="line">Query OK, 0 rows affected (0.01 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; show master status;</span><br><span class="line">+-----------------------+----------+--------------+------------------+-------------------+</span><br><span class="line">| File                  | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |</span><br><span class="line">+-----------------------+----------+--------------+------------------+-------------------+</span><br><span class="line">| mall-mysql-bin.000003 |      682 |              | mysql            |                   |</span><br><span class="line">+-----------------------+----------+--------------+------------------+-------------------+</span><br><span class="line">1 row <span class="keyword">in</span> <span class="built_in">set</span> (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>show master status;命令一会要用到。</p>
+<ol start="2">
+<li>拉取slave</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 3308:3306 --name mysql-slave -v ~/data/mysql-slave/<span class="built_in">log</span>:/var/<span class="built_in">log</span>/mysql -v ~/data/mysql-slave/data:/var/lib/mysql -v ~/data/mysql-slave/conf/my.cnf:/etc/my.cnf -e MYSQL_ROOT_PASSWORD=root -d mysql:8.0</span><br></pre></td></tr></table></figure>
+
+<p>进入到容器里面, 设置主库的信息，不需要额外配置docker网络，两个容器的网络就通，写本机的ifconfig的ip就行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it mysql-slave &#x2F;bin&#x2F;bash</span><br><span class="line"></span><br><span class="line">mysql -uroot -proot</span><br><span class="line"></span><br><span class="line">mysql&gt; change master to master_host&#x3D;&#39;192.168.199.192&#39;,master_user&#x3D;&#39;slave&#39;,master_password&#x3D;&#39;123456&#39;,master_port&#x3D;3307,master_log_file&#x3D;&#39;mall-mysql-bin.000003&#39;,master_log_pos&#x3D;682,master_connect_retry&#x3D;30;</span><br><span class="line"></span><br><span class="line">Query OK, 0 rows affected, 10 warnings (0.03 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; start slave;</span><br><span class="line"></span><br><span class="line">Query OK, 0 rows affected, 1 warning (0.03 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; show slave status \G;</span><br><span class="line"></span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line"></span><br><span class="line">               Slave_IO_State: Waiting for source to send event</span><br><span class="line"></span><br><span class="line">                  Master_Host: 192.168.199.192</span><br><span class="line"></span><br><span class="line">                  Master_User: slave</span><br><span class="line"></span><br><span class="line">                  Master_Port: 3307</span><br><span class="line"></span><br><span class="line">                Connect_Retry: 30</span><br><span class="line"></span><br><span class="line">              Master_Log_File: mall-mysql-bin.000003</span><br><span class="line"></span><br><span class="line">          Read_Master_Log_Pos: 682</span><br><span class="line"></span><br><span class="line">               Relay_Log_File: mall-mysql-relay-bin.000002</span><br><span class="line"></span><br><span class="line">                Relay_Log_Pos: 331</span><br><span class="line"></span><br><span class="line">        Relay_Master_Log_File: mall-mysql-bin.000003</span><br><span class="line"></span><br><span class="line">             Slave_IO_Running: Yes</span><br><span class="line"></span><br><span class="line">            Slave_SQL_Running: Yes</span><br><span class="line"></span><br><span class="line">              Replicate_Do_DB: </span><br><span class="line"></span><br><span class="line">          Replicate_Ignore_DB: </span><br><span class="line"></span><br><span class="line">           Replicate_Do_Table: </span><br><span class="line"></span><br><span class="line">       Replicate_Ignore_Table: </span><br><span class="line"></span><br><span class="line">      Replicate_Wild_Do_Table: </span><br><span class="line"></span><br><span class="line">  Replicate_Wild_Ignore_Table: </span><br><span class="line"></span><br><span class="line">                   Last_Errno: 0</span><br><span class="line"></span><br><span class="line">                   Last_Error: </span><br><span class="line"></span><br><span class="line">                 Skip_Counter: 0</span><br><span class="line"></span><br><span class="line">          Exec_Master_Log_Pos: 682</span><br><span class="line"></span><br><span class="line">              Relay_Log_Space: 546</span><br><span class="line"></span><br><span class="line">              Until_Condition: None</span><br><span class="line"></span><br><span class="line">               Until_Log_File: </span><br><span class="line"></span><br><span class="line">                Until_Log_Pos: 0</span><br><span class="line"></span><br><span class="line">           Master_SSL_Allowed: No</span><br><span class="line"></span><br><span class="line">           Master_SSL_CA_File: </span><br><span class="line"></span><br><span class="line">           Master_SSL_CA_Path: </span><br><span class="line"></span><br><span class="line">              Master_SSL_Cert: </span><br><span class="line"></span><br><span class="line">            Master_SSL_Cipher: </span><br><span class="line"></span><br><span class="line">               Master_SSL_Key: </span><br><span class="line"></span><br><span class="line">        Seconds_Behind_Master: 0</span><br><span class="line"></span><br><span class="line">Master_SSL_Verify_Server_Cert: No</span><br><span class="line"></span><br><span class="line">                Last_IO_Errno: 0</span><br><span class="line"></span><br><span class="line">                Last_IO_Error: </span><br><span class="line"></span><br><span class="line">               Last_SQL_Errno: 0</span><br><span class="line"></span><br><span class="line">               Last_SQL_Error: </span><br><span class="line"></span><br><span class="line">  Replicate_Ignore_Server_Ids: </span><br><span class="line"></span><br><span class="line">             Master_Server_Id: 101</span><br><span class="line"></span><br><span class="line">                  Master_UUID: 27bdea8f-624f-11f0-81d0-0242ac110002</span><br><span class="line"></span><br><span class="line">             Master_Info_File: mysql.slave_master_info</span><br><span class="line"></span><br><span class="line">                    SQL_Delay: 0</span><br><span class="line"></span><br><span class="line">          SQL_Remaining_Delay: NULL</span><br><span class="line"></span><br><span class="line">      Slave_SQL_Running_State: Replica has read all relay log; waiting for more updates</span><br><span class="line"></span><br><span class="line">           Master_Retry_Count: 86400</span><br><span class="line"></span><br><span class="line">                  Master_Bind: </span><br><span class="line"></span><br><span class="line">      Last_IO_Error_Timestamp: </span><br><span class="line"></span><br><span class="line">     Last_SQL_Error_Timestamp: </span><br><span class="line"></span><br><span class="line">               Master_SSL_Crl: </span><br><span class="line"></span><br><span class="line">           Master_SSL_Crlpath: </span><br><span class="line"></span><br><span class="line">           Retrieved_Gtid_Set: </span><br><span class="line"></span><br><span class="line">            Executed_Gtid_Set: </span><br><span class="line"></span><br><span class="line">                Auto_Position: 0</span><br><span class="line"></span><br><span class="line">         Replicate_Rewrite_DB: </span><br><span class="line"></span><br><span class="line">                 Channel_Name: </span><br><span class="line"></span><br><span class="line">           Master_TLS_Version: </span><br><span class="line"></span><br><span class="line">       Master_public_key_path: </span><br><span class="line"></span><br><span class="line">        Get_master_public_key: 0</span><br><span class="line"></span><br><span class="line">            Network_Namespace: </span><br><span class="line"></span><br><span class="line">1 row in set, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>一般有问题都是Last_IO_Error有问题，网络不通，或者server_id重复。server_id重复说明my.cnf没挂上，检查一下之前挂载目录的命令。show variables like ‘server_id’;可以查看当前的server_id。</p>
+<ol start="3">
+<li>测试环节<br>主库建表，从库能访问到就成功。</li>
+</ol>
+<!---->
+
+<pre><code>create databse test;
+use test;
+insert into t1 values(1,1);
+select * from t1;</code></pre><p><img src="https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/9b84fc13f2fe4670afb96fa999740190~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgd2F2ZTc3Nw==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiNzEyOTQ2NzE4NjE1NzQyIn0%3D&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1755332376&x-orig-sign=pxZBvjh4yvuvJEuJfMlzhzt0Plw%3D" alt="image.png"></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
