@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>初始化一个配置信息，postProcessBeforeInitialization和afterPropertiesSet用哪个 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="初始化一个配置信息，postProcessBeforeInitialization和afterPropertiesSet用哪个前言今天偶然看到一个文章 一次由于八股文引起的内存泄漏，看到文章里面的改,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="https://ppeony.github.io"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">初始化一个配置信息，postProcessBeforeInitialization和afterPropertiesSet用哪个</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">初始化一个配置信息，postProcessBeforeInitialization和afterPropertiesSet用哪个</h1>
+        <div class="stuff">
+            <span>十月 19, 2025</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="初始化一个配置信息，postProcessBeforeInitialization和afterPropertiesSet用哪个"><a href="#初始化一个配置信息，postProcessBeforeInitialization和afterPropertiesSet用哪个" class="headerlink" title="初始化一个配置信息，postProcessBeforeInitialization和afterPropertiesSet用哪个"></a>初始化一个配置信息，postProcessBeforeInitialization和afterPropertiesSet用哪个</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>今天偶然看到一个文章 <a href="https://mp.weixin.qq.com/s?__biz=MzIzOTU0NTQ0MA==&mid=2247537232&idx=1&sn=9e19a2d43250602e353b609dfc4043ab&chksm=e92a6f5fde5de649c84b5ea711008a2daa707dc5d18c6e4b2826a0f7f2477cb627639cda36d1&cur_album_id=3791235385540083730&scene=189" target="_blank" rel="noopener">一次由于八股文引起的内存泄漏</a>，看到文章里面的改法是换接口，从BeanPostProcessor换成InitializingBean，以前背八股时候还真没注意这两者区别，只是感觉很奇怪，都是初始化过程中能用的回调函数，为什么要写两个接口呢？文章里面也没谈论这两个区别，本文就看一下他们区别是什么。</p>
+<p>（我猜背八股的人有很多都没仔细了解过他们区别，只是知道有这么一堆函数）</p>
+<h2 id="如果要实现bean初始化时候，加载一个东西，用哪个接口？"><a href="#如果要实现bean初始化时候，加载一个东西，用哪个接口？" class="headerlink" title="如果要实现bean初始化时候，加载一个东西，用哪个接口？"></a>如果要实现bean初始化时候，加载一个东西，用哪个接口？</h2><p>按照以前的八股背法，反正这两个都是bean实例化之后调用的函数，放哪个不都一样么？</p>
+<p>bean的生命周期是：beforeInstantiation，实例化，afterInstantiation，属性赋值，beforeInitialization，afterPropertisSet，初始化（init-method），afterInitialization。</p>
+<p>但是八股没背的是 beforeInitialization 是针对每个bean都会调用的，afterPropertisSet只针对当前bean调用一次。</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>一个很简单的类，两个接口都实现，看里面打印了多少次</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyBeanPostProcessor</span> <span class="keyword">implements</span> <span class="title">BeanPostProcessor</span> , <span class="title">InitializingBean</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">postProcessBeforeInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"MyBeanPostProcessor"</span>);</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"afterPropertiesSet"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/PPeony/PPeony.github.io/refs/heads/master/img/postProcess1.png" alt="pic1"><br><img src="https://raw.githubusercontent.com/PPeony/PPeony.github.io/refs/heads/master/img/postProcess2.png" alt="pic2"></p>
+<p>可以看到 afterPropertiesSet 只打印了一次，postProcessBeforeInitialization 打印了六百多次，应该是每个bean都调用了一遍。</p>
+<p>下面看下spring源码，看看他是怎么调用的。</p>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><p>完整的bean的创建流程之前写过，可以翻翻我之前的文章。 <a href="https://ppeony.github.io/2025/08/10/feign%E7%9A%84bean%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B-%E5%BA%95%E5%B1%82%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B-%E6%BA%90%E7%A0%81%E8%B5%B0%E8%AF%BB/">了解spring的bean创建过程</a></p>
+<p>断点直接打到postProcessBeforeInitialization，print的地方，看堆栈是这个函数：<br>org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#initializeBean(java.lang.String, java.lang.Object, org.springframework.beans.factory.support.RootBeanDefinition)</p>
+<p>doCreateBean会调用initializeBean，就在populateBean之后</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// doCreateBean的代码一部分</span></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			populateBean(beanName, mbd, instanceWrapper);</span><br><span class="line">			exposedObject = initializeBean(beanName, exposedObject, mbd);</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+<p>也就是每个bean都会执行initializeBean，applyBeanPostProcessorsBeforeInitialization就是调用回调函数的地方</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Object <span class="title">initializeBean</span><span class="params">(String beanName, Object bean, @Nullable RootBeanDefinition mbd)</span> </span>&#123;</span><br><span class="line">	invokeAwareMethods(beanName, bean);</span><br><span class="line"></span><br><span class="line">	Object wrappedBean = bean;</span><br><span class="line">	<span class="keyword">if</span> (mbd == <span class="keyword">null</span> || !mbd.isSynthetic()) &#123;</span><br><span class="line">		wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		invokeInitMethods(beanName, wrappedBean, mbd);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> BeanCreationException(</span><br><span class="line">				(mbd != <span class="keyword">null</span> ? mbd.getResourceDescription() : <span class="keyword">null</span>), beanName, ex.getMessage(), ex);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (mbd == <span class="keyword">null</span> || !mbd.isSynthetic()) &#123;</span><br><span class="line">		wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> wrappedBean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>进入applyBeanPostProcessorsBeforeInitialization，可以看到代码里面getBeanPostProcessors拿了一个list</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">applyBeanPostProcessorsBeforeInitialization</span><span class="params">(Object existingBean, String beanName)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line"></span><br><span class="line">    Object result = existingBean;</span><br><span class="line">    <span class="keyword">for</span> (BeanPostProcessor processor : getBeanPostProcessors()) &#123;</span><br><span class="line">        Object current = processor.postProcessBeforeInitialization(result, beanName);</span><br><span class="line">        <span class="keyword">if</span> (current == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">        result = current;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>getBeanPostProcessors会直接返回成员变量beanPostProcessors，下面是beanPostProcessors的内容</p>
+<p><img src="https://raw.githubusercontent.com/PPeony/PPeony.github.io/refs/heads/master/img/postProcess3.png" alt="pic3"></p>
+<p>到这基本可以确定是每个bean都会执行一遍这个。</p>
+<p>下面看一下 afterPropertiesSet 在哪调用的。</p>
+<p>其实就在上面代码的下一行，invokeInitMethods</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">invokeInitMethods</span><span class="params">(String beanName, Object bean, @Nullable RootBeanDefinition mbd)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">boolean</span> isInitializingBean = (bean <span class="keyword">instanceof</span> InitializingBean);</span><br><span class="line">    <span class="keyword">if</span> (isInitializingBean &amp;&amp; (mbd == <span class="keyword">null</span> || !mbd.hasAnyExternallyManagedInitMethod(<span class="string">"afterPropertiesSet"</span>))) &#123;</span><br><span class="line">        <span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">            logger.trace(<span class="string">"Invoking afterPropertiesSet() on bean with name '"</span> + beanName + <span class="string">"'"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        ((InitializingBean) bean).afterPropertiesSet();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (mbd != <span class="keyword">null</span> &amp;&amp; bean.getClass() != NullBean<span class="class">.<span class="keyword">class</span>) </span>&#123;</span><br><span class="line">        String[] initMethodNames = mbd.getInitMethodNames();</span><br><span class="line">        <span class="keyword">if</span> (initMethodNames != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (String initMethodName : initMethodNames) &#123;</span><br><span class="line">                <span class="keyword">if</span> (StringUtils.hasLength(initMethodName) &amp;&amp;</span><br><span class="line">                        !(isInitializingBean &amp;&amp; <span class="string">"afterPropertiesSet"</span>.equals(initMethodName)) &amp;&amp;</span><br><span class="line">                        !mbd.hasAnyExternallyManagedInitMethod(initMethodName)) &#123;</span><br><span class="line">                    invokeCustomInitMethod(beanName, bean, mbd, initMethodName);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在就看出来了，调用的是当前bean的afterPropertiesSet。</p>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>早期直接背了，没有深刻理解，这都是隐患，之后要还回来。赶紧看看项目代码里面有没有用错的地方。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
