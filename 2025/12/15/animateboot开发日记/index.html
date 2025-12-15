@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>animateboot开发日记 - peony&#39;s blogs</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="peony,"> 
+    <meta name="description" content="Animateboot.com开发日记需求背景：
+
+摸鱼时候会打开网页版的音乐网站听歌。
+部分公司直接把网易云域名屏蔽，电脑无法访问，所以需要网易云以外的音乐平台。
+动漫歌曲希望有个汇总的地方，而且,"> 
+    <meta name="author" content="peony"> 
+    <link rel="alternative" href="atom.xml" title="peony&#39;s blogs" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon63.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">peony&#39;s blogs</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="https://ppeony.github.io"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">animateboot开发日记</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <!--<a title="获取二维码" class="icon-scan" href="javascript:;" ></a>-->
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">animateboot开发日记</h1>
+        <div class="stuff">
+            <span>十二月 15, 2025</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="Animateboot-com开发日记"><a href="#Animateboot-com开发日记" class="headerlink" title="Animateboot.com开发日记"></a>Animateboot.com开发日记</h1><p>需求背景：</p>
+<ol>
+<li>摸鱼时候会打开网页版的音乐网站听歌。</li>
+<li>部分公司直接把网易云域名屏蔽，电脑无法访问，所以需要网易云以外的音乐平台。</li>
+<li>动漫歌曲希望有个汇总的地方，而且点击直达，不需要我再去复制名字去搜索。<br>在十一月的时候，正好换工作，时间开始充裕起来，所以着手开发。</li>
+</ol>
+<h1 id="准备阶段-整理所需数据以及可行性探索"><a href="#准备阶段-整理所需数据以及可行性探索" class="headerlink" title="准备阶段-整理所需数据以及可行性探索"></a>准备阶段-整理所需数据以及可行性探索</h1><ol>
+<li>每个季度的动漫数据：爬虫抓取。</li>
+<li>每个季度动漫对应的歌曲：第二个爬虫。</li>
+<li>每个歌曲对应的链接：问了Gemini，对于YouTube，网易云，spotify，都给出了代码。 </li>
+<li>ui设计：让Gemini设计，不懂前端，所以本地通过ai-coding完成。</li>
+</ol>
+<p>做了一半发现可以做歌单，因此也有了下面需求。<br>5. 对于动漫进行排名。爬虫抓取中、日、美的网站，计算观看人数进行排名。<br>6. 根据排名结果，筛选前50%的动漫的歌曲。</p>
+<h1 id="相关技术"><a href="#相关技术" class="headerlink" title="相关技术"></a>相关技术</h1><h2 id="语义相似度的判断"><a href="#语义相似度的判断" class="headerlink" title="语义相似度的判断"></a>语义相似度的判断</h2><p>爬取动漫季度和爬取动漫歌曲，这是两个爬虫，两个爬虫得到的动漫名字可能不一样，而且可能有的在a爬虫存在，b爬虫中不存在。</p>
+<p>假设以a爬虫数据为准，需要在b爬虫中找出来对应的动漫，需要对b的每个动漫进行相似度判断。</p>
+<p>这个技术在RAG中也有应用。引入模型-&gt;转成向量-&gt;余弦算数。</p>
+<p>为了增加准确度，用多个语言都计算相似度，选最准确的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">score1 = util.cos_sim(emb_a_jp, emb_b_jp).item()  <span class="comment"># 日 vs 日</span></span><br><span class="line">score2 = util.cos_sim(emb_a_name, emb_b_name).item()  <span class="comment"># 中 vs 中</span></span><br><span class="line">score3 = util.cos_sim(emb_a_jp, emb_b_name).item()  <span class="comment"># 日 vs 中</span></span><br></pre></td></tr></table></figure>
+
+<p>这里面Gemini给了一个优化点，就是 <strong>先进行向量化，而不是每次都计算向量</strong> 。</p>
+<p>比如下面这样就是每次都计算，但是b里面单词向量会计算多次，所以时间非常慢。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cmp_s1_s2</span><span class="params">(s1, s2)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> s2 <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    start = time.time()</span><br><span class="line">    embedding1 = model.encode(s1, convert_to_tensor=<span class="literal">True</span>)</span><br><span class="line">    embedding2 = model.encode(s2, convert_to_tensor=<span class="literal">True</span>)</span><br><span class="line">    cosine_score = util.cos_sim(embedding1, embedding2)[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">    end = time.time()</span><br><span class="line">    <span class="keyword">return</span> cosine_score &gt; <span class="number">0.7</span></span><br></pre></td></tr></table></figure>
+<p>改成直接传两个对象，然后只计算一遍向量。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 部分代码已经省略</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cmp_json_main</span><span class="params">(json_a, json_b)</span>:</span></span><br><span class="line">    embeddings_a_name, embeddings_a_jp, embeddings_b_name, embeddings_b_jp = init(json_a, json_b)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(json_a)):</span><br><span class="line">        emb_a_name = embeddings_a_name[i]</span><br><span class="line">        emb_a_jp = embeddings_a_jp[i]</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(len(json_b)):</span><br><span class="line">            emb_b_name = embeddings_b_name[j]</span><br><span class="line">            emb_b_jp = embeddings_b_jp[j]</span><br><span class="line">            ...</span><br><span class="line">            score1 = util.cos_sim(emb_a_jp, emb_b_jp).item()  <span class="comment"># 日 vs 日</span></span><br><span class="line">            score2 = util.cos_sim(emb_a_name, emb_b_name).item()  <span class="comment"># 中 vs 中</span></span><br><span class="line">            score3 = util.cos_sim(emb_a_jp, emb_b_name).item()  <span class="comment"># 日 vs 中</span></span><br><span class="line">            ...</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">init</span><span class="params">(json_a, json_b)</span>:</span></span><br><span class="line">    print(<span class="string">"正在进行批量向量化 (这可能需要几秒钟)..."</span>)</span><br><span class="line">    start_time = time.time()</span><br><span class="line">    a_names = [item.get(<span class="string">'name'</span>, <span class="string">''</span>) <span class="keyword">for</span> item <span class="keyword">in</span> json_a]</span><br><span class="line">    a_jp_names = [item.get(<span class="string">'jp_name'</span>, <span class="string">''</span>) <span class="keyword">for</span> item <span class="keyword">in</span> json_a]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 提取 json_b 的所有文本</span></span><br><span class="line">    b_names = [item.get(<span class="string">'name'</span>, <span class="string">''</span>) <span class="keyword">for</span> item <span class="keyword">in</span> json_b]</span><br><span class="line">    b_jp_names = [item.get(<span class="string">'jp_name'</span>, <span class="string">''</span>) <span class="keyword">for</span> item <span class="keyword">in</span> json_b]</span><br><span class="line"></span><br><span class="line">    embeddings_a_name = model.encode(a_names, convert_to_tensor=<span class="literal">True</span>)</span><br><span class="line">    embeddings_a_jp = model.encode(a_jp_names, convert_to_tensor=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    embeddings_b_name = model.encode(b_names, convert_to_tensor=<span class="literal">True</span>)</span><br><span class="line">    embeddings_b_jp = model.encode(b_jp_names, convert_to_tensor=<span class="literal">True</span>)</span><br><span class="line">    end_time = time.time()</span><br><span class="line">    print(<span class="string">f"向量化完成，cost <span class="subst">&#123;end_time - start_time&#125;</span>s, 开始比对..."</span>)</span><br><span class="line">    <span class="keyword">return</span> embeddings_a_name, embeddings_a_jp, embeddings_b_name, embeddings_b_jp</span><br></pre></td></tr></table></figure>
+<p>这个优化非常明显，原来可能两分钟，修改完之后，这一步十几秒。</p>
+<h2 id="歌曲的获取"><a href="#歌曲的获取" class="headerlink" title="歌曲的获取"></a>歌曲的获取</h2><p>也是问Gemini得到的，只有spotify提供了官方接口，其他的都是开源的逆向工程写的依赖包，通过Gemini给出示例代码，复制粘贴就能执行。</p>
+<p>拿到了歌曲后，也不是直接就是正确的，还是需要人工校对。</p>
+<p>在后期尝试引入llm，增大校对正确率。这种方式对于网易云比较好，因为网易云本身的搜索引擎不够准确，YouTube和spotify本身搜索引擎就很强大了，很少会出现错误情况，所以llm提升不大。</p>
+<p>而且时间很长，因为需要retry，一旦retry，和llm的交互就变多了，140首歌曲要跑20min。这部分其实可以做优化，减少和llm的通信次数，但是懒得调试了，也不是不能用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">deepseek_match</span><span class="params">(original_text: str, cand: Dict[str, Any], anime_names: List[str])</span> -&gt; bool:</span></span><br><span class="line">    api_key = os.environ.get(<span class="string">'DEEPSEEK'</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> api_key:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    model = <span class="string">'deepseek-chat'</span></span><br><span class="line">    system = <span class="string">'You are a strict music matcher. Return JSON &#123;"is_same": true|false&#125; only.'</span></span><br><span class="line">    cand_title = cand.get(<span class="string">'name'</span>) <span class="keyword">or</span> <span class="string">''</span></span><br><span class="line">    cand_artists = <span class="string">', '</span>.join(cand.get(<span class="string">'artists'</span>) <span class="keyword">or</span> [])</span><br><span class="line">    cand_alias = cand.get(<span class="string">'alias'</span>) <span class="keyword">or</span> []</span><br><span class="line">    prompt = (</span><br><span class="line">        <span class="string">'Determine if the candidate song matches the intended song described by the original text. '</span></span><br><span class="line">        <span class="string">'In original text, the song name is inside the parentheses, and the artist name is outside.'</span></span><br><span class="line">        <span class="string">'Consider candidate song name and artists, they must both match.'</span></span><br><span class="line">        <span class="string">'Some artists\' names may be converted to Roman sounds, but they are essentially the same person.'</span></span><br><span class="line">        <span class="string">'Additionally, also consider candidate aliases; '</span></span><br><span class="line">        <span class="string">'if alias contains anime Chinese names or Japanese names, treat as match. Return strictly JSON with key is_same.\n'</span></span><br><span class="line">        <span class="string">f'Original text: <span class="subst">&#123;original_text&#125;</span>\n'</span></span><br><span class="line">        <span class="string">f'Anime names (CN/JP): <span class="subst">&#123;json.dumps([n <span class="keyword">for</span> n <span class="keyword">in</span> anime_names <span class="keyword">if</span> n], ensure_ascii=<span class="literal">False</span>)&#125;</span>\n'</span></span><br><span class="line">        <span class="string">f'Candidate title: <span class="subst">&#123;cand_title&#125;</span>\n'</span></span><br><span class="line">        <span class="string">f'Candidate artist: <span class="subst">&#123;cand_artists&#125;</span>\n'</span></span><br><span class="line">        <span class="string">f'Candidate aliases: <span class="subst">&#123;json.dumps(cand_alias, ensure_ascii=<span class="literal">False</span>)&#125;</span>\n'</span></span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        r = requests.post(</span><br><span class="line">            <span class="string">'https://api.deepseek.com/v1/chat/completions'</span>,</span><br><span class="line">            headers=&#123;</span><br><span class="line">                <span class="string">'Authorization'</span>: <span class="string">f'Bearer <span class="subst">&#123;api_key&#125;</span>'</span>,</span><br><span class="line">                <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span></span><br><span class="line">            &#125;,</span><br><span class="line">            json=&#123;</span><br><span class="line">                <span class="string">'model'</span>: model,</span><br><span class="line">                <span class="string">'messages'</span>: [</span><br><span class="line">                    &#123;<span class="string">'role'</span>: <span class="string">'system'</span>, <span class="string">'content'</span>: system&#125;,</span><br><span class="line">                    &#123;<span class="string">'role'</span>: <span class="string">'user'</span>, <span class="string">'content'</span>: prompt&#125;</span><br><span class="line">                ],</span><br><span class="line">                <span class="string">'temperature'</span>: <span class="number">0</span></span><br><span class="line">            &#125;,</span><br><span class="line">            timeout=<span class="number">30</span></span><br><span class="line">        )</span><br><span class="line">        r.raise_for_status()</span><br><span class="line">        data = r.json()</span><br><span class="line">        content = data.get(<span class="string">'choices'</span>, [&#123;&#125;])[<span class="number">0</span>].get(<span class="string">'message'</span>, &#123;&#125;).get(<span class="string">'content'</span>, <span class="string">''</span>)</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            parsed = json.loads(content)</span><br><span class="line">            print(<span class="string">f"deepseek_answer: <span class="subst">&#123;parsed&#125;</span>"</span>)</span><br><span class="line">            <span class="keyword">return</span> bool(parsed.get(<span class="string">'is_same'</span>))</span><br><span class="line">        <span class="keyword">except</span> Exception:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">except</span> Exception:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="动漫的观看数和排名的计算"><a href="#动漫的观看数和排名的计算" class="headerlink" title="动漫的观看数和排名的计算"></a>动漫的观看数和排名的计算</h2><p>观看数也是爬虫得到，然后统计观看数进行排名。算法由Gemini提供。</p>
+<h2 id="每一步都需要人工校对"><a href="#每一步都需要人工校对" class="headerlink" title="每一步都需要人工校对"></a>每一步都需要人工校对</h2><p>动漫歌曲的搜索、观看数的搜索，都是要人工校对的。但是由于准确度比较高，80%左右，人工修改的点很少。</p>
+<p>也考虑过接入llm，但是接入之后准确率又不敢保证是100%，最后还是得上人工。</p>
+<h1 id="ui设计"><a href="#ui设计" class="headerlink" title="ui设计"></a>ui设计</h1><p>旧的设计选用material-ui，感觉不好看，发给Gemini写了一版，Gemini直接给出代码，并且生成界面，于是沿用下来。</p>
+<p><img src="https://raw.githubusercontent.com/PPeony/PPeony.github.io/refs/heads/master/img/anime-oldui.png" alt="旧的ui"></p>
+<p>Gemini改过之后的：</p>
+<p><img src="https://raw.githubusercontent.com/PPeony/PPeony.github.io/refs/heads/master/img/anime-newui-light.png" alt="新的ui"></p>
+<p>还加上了关灯效果</p>
+<p><img src="https://raw.githubusercontent.com/PPeony/PPeony.github.io/refs/heads/master/img/anime-newui.png" alt="新的ui"></p>
+<h1 id="cloudflare部署"><a href="#cloudflare部署" class="headerlink" title="cloudflare部署"></a>cloudflare部署</h1><p>这部分没接触过，所以也相当于是问Gemini来了解。</p>
+<p>部署的流程比较简单，把域名绑定上去就行了。</p>
+<p>之后出现了两个问题：</p>
+<ol>
+<li>爬虫</li>
+<li>主页面加载太慢</li>
+</ol>
+<h2 id="爬虫"><a href="#爬虫" class="headerlink" title="爬虫"></a>爬虫</h2><p>监控面板看到一个时间点有1M的请求，明显是爬虫在访问网站，所以问Gemini做一些配置。</p>
+<p>比如配置bot、配置contry限制，等等等等。<br><img src="https://raw.githubusercontent.com/PPeony/PPeony.github.io/refs/heads/master/img/anime3.png" alt="gemini1"></p>
+<p><img src="https://raw.githubusercontent.com/PPeony/PPeony.github.io/refs/heads/master/img/anime4.png" alt="gemini2"></p>
+<h2 id="主页面加载慢"><a href="#主页面加载慢" class="headerlink" title="主页面加载慢"></a>主页面加载慢</h2><p>问了Gemini：<br><img src="https://raw.githubusercontent.com/PPeony/PPeony.github.io/refs/heads/master/img/anime1.png" alt="gemini1"></p>
+<p><img src="https://raw.githubusercontent.com/PPeony/PPeony.github.io/refs/heads/master/img/anime2.png" alt="gemini2"></p>
+<p>f12看了一下请求的模板，有很多woff2文件让trae去掉这部分代码，同时重复的ico、png请求也削减。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>Gemini能做到大部分事情，可以帮助小白从零开始搭建网站。</p>
+<p>但是具体的调试、思路、工具的使用结果还是要自己思考。</p>
+<p>并且一部分术语起码要知道，假设我命令trae去写前端界面，那么起码要知道组件都有哪些，能说出来，ai才能理解。</p>
+<p>整个项目耗时一个月左右，每天都在爬取数据、人工校对数据才算是弄到一个自己满意的水平，也有一点小小的满足感。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='false'
+        data-ci='c82ee42088349c609c4d'
+        data-cs='541eefaa06715f3b1bcd6bf41cb69a4053d18348'
+        data-r='PPeony.github.io'
+        data-o='PPeony'
+        data-a='PPeony'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
